@@ -1,0 +1,200 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/lib/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ─── Better Auth tables ───────────────────────────────────────────────────────
+
+model user {
+  id            String    @id
+  name          String
+  email         String    @unique
+  emailVerified Boolean   @default(false)
+  image         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  role          UserRole  @default(USER)
+
+  sessions  session[]
+  accounts  account[]
+
+  properties   Property[]
+  carts        ShoppingCart[]
+}
+
+model session {
+  id        String   @id
+  expiresAt DateTime
+  token     String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      user     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model account {
+  id                    String    @id
+  accountId             String
+  providerId            String
+  userId                String
+  user                  user      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+}
+
+model verification {
+  id         String    @id
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime? @default(now())
+  updatedAt  DateTime? @updatedAt
+}
+
+// ─── Enums ────────────────────────────────────────────────────────────────────
+
+enum UserRole {
+  USER
+  ADMIN
+}
+
+// ─── Catalogue (curated by admin) ────────────────────────────────────────────
+
+model EquipmentType {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  category    String
+  description String?
+  imageUrl    String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  maintenanceTemplates MaintenanceTemplate[]
+  equipments           Equipment[]
+}
+
+model MaintenanceTemplate {
+  id              String        @id @default(cuid())
+  equipmentTypeId String
+  equipmentType   EquipmentType @relation(fields: [equipmentTypeId], references: [id])
+  title           String
+  description     String?
+  frequencyDays   Int
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  maintenanceTasks MaintenanceTask[]
+  products         ProductOnTemplate[]
+}
+
+model Product {
+  id           String   @id @default(cuid())
+  name         String
+  description  String?
+  imageUrl     String?
+  affiliateUrl String
+  retailer     String
+  price        Float?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  templates ProductOnTemplate[]
+  cartItems CartItem[]
+}
+
+model ProductOnTemplate {
+  templateId String
+  template   MaintenanceTemplate @relation(fields: [templateId], references: [id])
+  productId  String
+  product    Product             @relation(fields: [productId], references: [id])
+
+  @@id([templateId, productId])
+}
+
+// ─── User domain ─────────────────────────────────────────────────────────────
+
+model Property {
+  id        String   @id @default(cuid())
+  userId    String
+  user      user     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name      String
+  address   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  equipments Equipment[]
+}
+
+model Equipment {
+  id              String        @id @default(cuid())
+  propertyId      String
+  property        Property      @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  equipmentTypeId String
+  equipmentType   EquipmentType @relation(fields: [equipmentTypeId], references: [id])
+  name            String
+  brand           String?
+  model           String?
+  installedAt     DateTime?
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  maintenancePlans MaintenancePlan[]
+}
+
+model MaintenancePlan {
+  id          String    @id @default(cuid())
+  equipmentId String
+  equipment   Equipment @relation(fields: [equipmentId], references: [id], onDelete: Cascade)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  tasks MaintenanceTask[]
+}
+
+model MaintenanceTask {
+  id          String               @id @default(cuid())
+  planId      String
+  plan        MaintenancePlan      @relation(fields: [planId], references: [id], onDelete: Cascade)
+  templateId  String?
+  template    MaintenanceTemplate? @relation(fields: [templateId], references: [id])
+  title       String
+  dueDate     DateTime
+  completedAt DateTime?
+  createdAt   DateTime             @default(now())
+  updatedAt   DateTime             @updatedAt
+}
+
+// ─── Shopping ─────────────────────────────────────────────────────────────────
+
+model ShoppingCart {
+  id        String   @id @default(cuid())
+  userId    String
+  user      user     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  items CartItem[]
+}
+
+model CartItem {
+  id        String       @id @default(cuid())
+  cartId    String
+  cart      ShoppingCart @relation(fields: [cartId], references: [id], onDelete: Cascade)
+  productId String
+  product   Product      @relation(fields: [productId], references: [id])
+  quantity  Int          @default(1)
+  createdAt DateTime     @default(now())
+}

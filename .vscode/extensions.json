@@ -1,0 +1,26 @@
+{
+	"recommendations": [
+		// Svelte
+		"svelte.svelte-vscode",
+
+		// TypeScript / JavaScript
+		"dbaeumer.vscode-eslint",
+
+		// Prisma
+		"prisma.prisma",
+
+		// Tailwind CSS
+		"bradlc.vscode-tailwindcss",
+
+		// Tests
+		"vitest.explorer",
+
+		// Docker
+		"ms-azuretools.vscode-docker",
+
+		// Qualité
+		"esbenp.prettier-vscode",
+		"editorconfig.editorconfig"
+	],
+	"unwantedRecommendations": []
+}
