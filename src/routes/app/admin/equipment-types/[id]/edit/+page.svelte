@@ -1,7 +1,19 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
-	import { ArrowLeft, Trash2, Plus, Clock } from '@lucide/svelte';
+	import { Trash2, Plus, Clock } from '@lucide/svelte';
 	import type { ActionData, PageData } from './$types';
+	import {
+		Button,
+		Input,
+		Textarea,
+		FormField,
+		Card,
+		CardHeader,
+		ErrorMessage,
+		Badge,
+		IconBox,
+		BackLink
+	} from '$lib/components/ui';
 
 	let { data, form }: { data: PageData; form: ActionData } = $props();
 	let loading = $state(false);
@@ -32,16 +44,10 @@
 </script>
 
 <div class="max-w-lg">
-	<a
-		href="/app/admin/equipment-types"
-		class="inline-flex items-center gap-1.5 text-sm text-slate-500 hover:text-slate-700 mb-6 transition-colors"
-	>
-		<ArrowLeft class="w-4 h-4" />
-		Retour au catalogue
-	</a>
+	<BackLink href="/app/admin/equipment-types" label="Retour au catalogue" />
 
 	<!-- Edit form -->
-	<div class="bg-white rounded-2xl border border-slate-100 p-6 mb-4">
+	<Card class="p-6 mb-4">
 		<h1 class="text-xl font-semibold text-slate-900 mb-1">Modifier le type</h1>
 		<p class="text-sm text-slate-500 mb-6">Modification de « {data.type.name} »</p>
 
@@ -57,65 +63,51 @@
 			}}
 			class="space-y-4"
 		>
-			<div>
-				<label for="name" class="block text-sm font-medium text-slate-700 mb-1.5">
-					Nom <span class="text-red-500">*</span>
-				</label>
-				<input
+			<FormField label="Nom" id="name" required>
+				<Input
 					id="name"
 					name="name"
 					type="text"
 					required
 					value={form?.name ?? data.type.name}
-					class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent"
+					accent="violet"
 				/>
-			</div>
-			<div>
-				<label for="category" class="block text-sm font-medium text-slate-700 mb-1.5">
-					Catégorie <span class="text-red-500">*</span>
-				</label>
-				<input
+			</FormField>
+			<FormField label="Catégorie" id="category" required>
+				<Input
 					id="category"
 					name="category"
 					type="text"
 					required
 					list="category-suggestions"
 					value={form?.category ?? data.type.category}
-					class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent"
+					accent="violet"
 				/>
 				<datalist id="category-suggestions">
 					{#each CATEGORIES as cat}
 						<option value={cat}></option>
 					{/each}
 				</datalist>
-			</div>
-			<div>
-				<label for="description" class="block text-sm font-medium text-slate-700 mb-1.5">
-					Description <span class="text-slate-400 font-normal">(optionnelle)</span>
-				</label>
-				<textarea
+			</FormField>
+			<FormField label="Description" id="description" optional="optionnelle">
+				<Textarea
 					id="description"
 					name="description"
-					rows={3}
 					value={form?.description ?? data.type.description ?? ''}
-					class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent resize-none"
-				></textarea>
-			</div>
+					accent="violet"
+				/>
+			</FormField>
 			{#if form?.error}
-				<p class="text-sm text-red-600 bg-red-50 rounded-lg px-3 py-2">{form.error}</p>
+				<ErrorMessage message={form.error} />
 			{/if}
-			<button
-				type="submit"
-				disabled={loading}
-				class="w-full bg-violet-600 hover:bg-violet-700 text-white font-medium py-2.5 rounded-xl text-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-			>
+			<Button type="submit" variant="admin" disabled={loading} fullWidth>
 				{loading ? 'Enregistrement…' : 'Enregistrer'}
-			</button>
+			</Button>
 		</form>
-	</div>
+	</Card>
 
 	<!-- Maintenance rules -->
-	<div class="bg-white rounded-2xl border border-slate-100 p-6 mb-4">
+	<Card class="p-6 mb-4">
 		<div class="flex items-center justify-between mb-4">
 			<div>
 				<h2 class="font-semibold text-slate-900">Règles de maintenance</h2>
@@ -123,11 +115,11 @@
 					Fréquences d'entretien recommandées pour ce type.
 				</p>
 			</div>
-			<span class="text-xs font-medium text-violet-600 bg-violet-50 px-2 py-1 rounded-lg">
+			<Badge color="violet">
 				{data.type.maintenanceRules.length} règle{data.type.maintenanceRules.length !== 1
 					? 's'
 					: ''}
-			</span>
+			</Badge>
 		</div>
 
 		{#if data.type.maintenanceRules.length > 0}
@@ -135,11 +127,7 @@
 				{#each data.type.maintenanceRules as rule}
 					<li class="flex items-start justify-between gap-3 py-3 first:pt-0 last:pb-0">
 						<div class="flex items-start gap-2.5 flex-1 min-w-0">
-							<div
-								class="w-7 h-7 rounded-lg bg-violet-50 flex items-center justify-center shrink-0 mt-0.5"
-							>
-								<Clock class="w-3.5 h-3.5 text-violet-600" strokeWidth={1.5} />
-							</div>
+							<IconBox icon={Clock} color="violet" size="xs" class="mt-0.5" />
 							<div class="min-w-0">
 								<p class="text-sm font-medium text-slate-800">{rule.label}</p>
 								<p class="text-xs text-violet-600">{intervalLabel(rule.intervalWeeks)}</p>
@@ -150,13 +138,9 @@
 						</div>
 						<form method="POST" action="?/deleteRule" use:enhance>
 							<input type="hidden" name="ruleId" value={rule.id} />
-							<button
-								type="submit"
-								class="text-slate-300 hover:text-red-500 transition-colors p-1 rounded"
-								title="Supprimer cette règle"
-							>
+							<Button type="submit" variant="iconDanger" title="Supprimer cette règle">
 								<Trash2 class="w-3.5 h-3.5" />
-							</button>
+							</Button>
 						</form>
 					</li>
 				{/each}
@@ -164,7 +148,7 @@
 		{/if}
 
 		{#if form?.ruleError}
-			<p class="text-sm text-red-600 bg-red-50 rounded-lg px-3 py-2 mb-3">{form.ruleError}</p>
+			<ErrorMessage message={form.ruleError} class="mb-3" />
 		{/if}
 
 		<!-- Add rule form -->
@@ -183,47 +167,46 @@
 			<p class="text-xs font-medium text-slate-500 uppercase tracking-wide">Nouvelle règle</p>
 			<div class="flex gap-2">
 				<div class="flex-1">
-					<input
+					<Input
 						name="label"
 						type="text"
 						placeholder="Ex : Révision annuelle"
 						required
-						class="w-full px-3 py-2 rounded-lg border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent"
+						size="sm"
+						accent="violet"
 					/>
 				</div>
-				<div class="w-28">
-					<div class="relative">
-						<input
-							name="intervalWeeks"
-							type="number"
-							min="1"
-							placeholder="52"
-							required
-							class="w-full px-3 py-2 rounded-lg border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent pr-14"
-						/>
-						<span
-							class="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-slate-400 pointer-events-none"
-							>sem.</span
-						>
-					</div>
+				<div class="w-28 relative">
+					<Input
+						name="intervalWeeks"
+						type="number"
+						min="1"
+						placeholder="52"
+						required
+						size="sm"
+						accent="violet"
+						class="pr-14"
+					/>
+					<span
+						class="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-slate-400 pointer-events-none"
+					>
+						sem.
+					</span>
 				</div>
 			</div>
-			<input
+			<Input
 				name="description"
 				type="text"
 				placeholder="Description optionnelle"
-				class="w-full px-3 py-2 rounded-lg border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent"
+				size="sm"
+				accent="violet"
 			/>
-			<button
-				type="submit"
-				disabled={addingRule}
-				class="inline-flex items-center gap-1.5 bg-violet-600 hover:bg-violet-700 text-white font-medium px-4 py-2 rounded-lg text-sm transition-colors disabled:opacity-50"
-			>
+			<Button type="submit" variant="admin" size="sm" disabled={addingRule}>
 				<Plus class="w-3.5 h-3.5" />
 				{addingRule ? 'Ajout…' : 'Ajouter'}
-			</button>
+			</Button>
 		</form>
-	</div>
+	</Card>
 
 	<!-- Danger zone -->
 	<div class="bg-white rounded-2xl border border-red-100 p-6">
@@ -232,7 +215,7 @@
 			La suppression est impossible si des équipements utilisent ce type.
 		</p>
 		{#if form?.deleteError}
-			<p class="text-sm text-red-600 bg-red-50 rounded-lg px-3 py-2 mb-3">{form.deleteError}</p>
+			<ErrorMessage message={form.deleteError} class="mb-3" />
 		{/if}
 		<form
 			method="POST"
@@ -245,14 +228,10 @@
 				};
 			}}
 		>
-			<button
-				type="submit"
-				disabled={deleting}
-				class="inline-flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white font-medium px-4 py-2 rounded-xl text-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-			>
+			<Button type="submit" variant="danger" size="sm" disabled={deleting}>
 				<Trash2 class="w-4 h-4" />
 				{deleting ? 'Suppression…' : 'Supprimer ce type'}
-			</button>
+			</Button>
 		</form>
 	</div>
 </div>

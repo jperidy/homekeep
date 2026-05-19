@@ -3,6 +3,7 @@
 	import { authClient } from '$lib/auth-client';
 	import { page } from '$app/stores';
 	import { goto } from '$app/navigation';
+	import { Button, Input, FormField, ErrorMessage } from '$lib/components/ui';
 
 	let password = $state('');
 	let passwordConfirm = $state('');
@@ -37,14 +38,16 @@
 
 	{#if !token}
 		<div class="text-center py-4">
-			<p class="text-sm text-red-600 bg-red-50 rounded-lg px-3 py-3">
-				Lien invalide. Veuillez recommencer la procédure depuis
-				<a href="/forgot-password" class="underline">mot de passe oublié</a>.
-			</p>
+			<ErrorMessage
+				message="Lien invalide. Veuillez recommencer la procédure depuis"
+				class="rounded-lg px-3 py-3"
+			/>
 		</div>
 	{:else if success}
 		<div class="text-center py-4">
-			<div class="w-12 h-12 bg-green-50 rounded-full flex items-center justify-center mx-auto mb-3">
+			<div
+				class="w-12 h-12 bg-green-50 rounded-full flex items-center justify-center mx-auto mb-3"
+			>
 				<Check class="w-6 h-6 text-green-600" />
 			</div>
 			<p class="font-medium text-slate-800">Mot de passe mis à jour !</p>
@@ -52,44 +55,32 @@
 		</div>
 	{:else}
 		<form onsubmit={handleSubmit} class="space-y-4">
-			<div>
-				<label for="password" class="block text-sm font-medium text-slate-700 mb-1.5">
-					Nouveau mot de passe
-				</label>
-				<input
+			<FormField label="Nouveau mot de passe" id="password">
+				<Input
 					id="password"
 					type="password"
 					bind:value={password}
 					required
 					minlength={8}
 					placeholder="8 caractères minimum"
-					class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent placeholder:text-slate-400"
 				/>
-			</div>
-			<div>
-				<label for="password-confirm" class="block text-sm font-medium text-slate-700 mb-1.5">
-					Confirmer le mot de passe
-				</label>
-				<input
+			</FormField>
+			<FormField label="Confirmer le mot de passe" id="password-confirm">
+				<Input
 					id="password-confirm"
 					type="password"
 					bind:value={passwordConfirm}
 					required
 					minlength={8}
 					placeholder="Répétez votre mot de passe"
-					class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent placeholder:text-slate-400"
 				/>
-			</div>
+			</FormField>
 			{#if error}
-				<p class="text-sm text-red-600 bg-red-50 rounded-lg px-3 py-2">{error}</p>
+				<ErrorMessage message={error} />
 			{/if}
-			<button
-				type="submit"
-				disabled={loading}
-				class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 rounded-xl text-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-			>
+			<Button type="submit" disabled={loading} fullWidth>
 				{loading ? 'Enregistrement…' : 'Enregistrer le mot de passe'}
-			</button>
+			</Button>
 		</form>
 	{/if}
 </div>

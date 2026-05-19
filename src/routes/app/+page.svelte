@@ -2,27 +2,37 @@
 	import { Home, Wrench, ClipboardList, Plus, LayoutGrid } from '@lucide/svelte';
 	import type { Component } from 'svelte';
 	import type { PageData } from './$types';
+	import { Button, Card, CardHeader, EmptyState } from '$lib/components/ui';
 
 	let { data }: { data: PageData } = $props();
 
-	const stats: { label: string; value: number; icon: Component; color: string }[] = $derived([
+	const stats: {
+		label: string;
+		value: number;
+		icon: Component;
+		bg: string;
+		iconColor: string;
+	}[] = $derived([
 		{
 			label: 'Propriétés',
 			value: data.properties.length,
 			icon: Home,
-			color: 'text-blue-600 bg-blue-50'
+			bg: 'bg-blue-50',
+			iconColor: 'text-blue-600'
 		},
 		{
 			label: 'Équipements',
 			value: data.equipmentCount,
 			icon: Wrench,
-			color: 'text-violet-600 bg-violet-50'
+			bg: 'bg-violet-50',
+			iconColor: 'text-violet-600'
 		},
 		{
 			label: 'Tâches en attente',
 			value: data.pendingTaskCount,
 			icon: ClipboardList,
-			color: 'text-amber-600 bg-amber-50'
+			bg: 'bg-amber-50',
+			iconColor: 'text-amber-600'
 		}
 	]);
 
@@ -56,8 +66,10 @@
 		{#each stats as stat}
 			{@const Icon = stat.icon}
 			<div class="bg-white rounded-2xl border border-slate-100 p-5 flex items-center gap-4">
-				<div class="w-11 h-11 rounded-xl {stat.color} flex items-center justify-center shrink-0">
-					<Icon class="w-5 h-5" strokeWidth={1.5} />
+				<div
+					class="w-11 h-11 rounded-xl {stat.bg} flex items-center justify-center shrink-0"
+				>
+					<Icon class="w-5 h-5 {stat.iconColor}" strokeWidth={1.5} />
 				</div>
 				<div>
 					<p class="text-2xl font-bold text-slate-900">{stat.value}</p>
@@ -69,17 +81,14 @@
 
 	<!-- Properties list or empty state -->
 	{#if data.properties.length > 0}
-		<div class="bg-white rounded-2xl border border-slate-100 mb-8">
-			<div class="px-5 py-4 border-b border-slate-100 flex items-center justify-between">
+		<Card class="mb-8">
+			<CardHeader>
 				<h2 class="font-semibold text-slate-900">Mes propriétés</h2>
-				<a
-					href="/app/properties/new"
-					class="inline-flex items-center gap-1 text-sm text-blue-600 hover:underline"
-				>
+				<Button href="/app/properties/new" variant="ghost" size="xs">
 					<Plus class="w-3.5 h-3.5" />
 					Ajouter
-				</a>
-			</div>
+				</Button>
+			</CardHeader>
 			<ul class="divide-y divide-slate-50">
 				{#each data.properties as property}
 					<li>
@@ -87,7 +96,9 @@
 							href="/app/properties/{property.id}"
 							class="px-5 py-4 flex items-center gap-3 hover:bg-slate-50 transition-colors"
 						>
-							<div class="w-9 h-9 bg-blue-50 rounded-xl flex items-center justify-center shrink-0">
+							<div
+								class="w-9 h-9 bg-blue-50 rounded-xl flex items-center justify-center shrink-0"
+							>
 								<Home class="w-4 h-4 text-blue-600" strokeWidth={1.5} />
 							</div>
 							<div class="flex-1 min-w-0">
@@ -100,26 +111,21 @@
 					</li>
 				{/each}
 			</ul>
-		</div>
+		</Card>
 	{:else}
-		<div class="bg-white rounded-2xl border border-slate-100 p-10 text-center mb-8">
-			<div class="w-16 h-16 bg-blue-50 rounded-2xl flex items-center justify-center mx-auto mb-4">
-				<Home class="w-8 h-8 text-blue-600" strokeWidth={1.5} />
-			</div>
-			<h2 class="text-lg font-semibold text-slate-900 mb-2">
-				Commencez par ajouter votre logement
-			</h2>
-			<p class="text-slate-500 text-sm mb-6 max-w-sm mx-auto">
-				Enregistrez votre première propriété pour générer votre planning de maintenance
-				personnalisé.
-			</p>
-			<a
-				href="/app/properties/new"
-				class="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-medium px-5 py-2.5 rounded-xl text-sm transition-colors"
+		<div class="mb-8">
+			<EmptyState
+				icon={Home}
+				title="Commencez par ajouter votre logement"
+				description="Enregistrez votre première propriété pour générer votre planning de maintenance personnalisé."
 			>
-				<Plus class="w-4 h-4" />
-				Ajouter ma première propriété
-			</a>
+				{#snippet action()}
+					<Button href="/app/properties/new">
+						<Plus class="w-4 h-4" />
+						Ajouter ma première propriété
+					</Button>
+				{/snippet}
+			</EmptyState>
 		</div>
 	{/if}
 
@@ -135,7 +141,9 @@
 				<div
 					class="w-10 h-10 rounded-xl bg-slate-100 group-hover:bg-blue-50 flex items-center justify-center shrink-0 transition-colors"
 				>
-					<Icon class="w-5 h-5 text-slate-500 group-hover:text-blue-600 transition-colors" />
+					<Icon
+						class="w-5 h-5 text-slate-500 group-hover:text-blue-600 transition-colors"
+					/>
 				</div>
 				<div>
 					<p class="font-medium text-slate-900 mb-0.5">{action.title}</p>

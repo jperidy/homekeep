@@ -3,6 +3,7 @@
 	import { signIn, authClient } from '$lib/auth-client';
 	import { goto } from '$app/navigation';
 	import { env } from '$env/dynamic/public';
+	import { Button, Input, FormField, ErrorMessage } from '$lib/components/ui';
 
 	const googleEnabled = env.PUBLIC_GOOGLE_ENABLED === 'true';
 
@@ -133,70 +134,50 @@
 		</div>
 	{:else if mode === 'password'}
 		<form onsubmit={handlePasswordLogin} class="space-y-4">
-			<div>
-				<label for="email" class="block text-sm font-medium text-slate-700 mb-1.5">Email</label>
-				<input
-					id="email"
-					type="email"
-					bind:value={email}
-					required
-					placeholder="vous@exemple.fr"
-					class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent placeholder:text-slate-400"
-				/>
-			</div>
+			<FormField label="Email" id="email">
+				<Input id="email" type="email" bind:value={email} required placeholder="vous@exemple.fr" />
+			</FormField>
 			<div>
 				<div class="flex items-center justify-between mb-1.5">
-					<label for="password" class="block text-sm font-medium text-slate-700">Mot de passe</label
-					>
-					<a href="/forgot-password" class="text-xs text-blue-600 hover:underline"
-						>Mot de passe oublié ?</a
-					>
+					<label for="password" class="block text-sm font-medium text-slate-700">
+						Mot de passe
+					</label>
+					<a href="/forgot-password" class="text-xs text-blue-600 hover:underline">
+						Mot de passe oublié ?
+					</a>
 				</div>
-				<input
+				<Input
 					id="password"
 					type="password"
 					bind:value={password}
 					required
 					placeholder="••••••••"
-					class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent placeholder:text-slate-400"
 				/>
 			</div>
 			{#if error}
-				<p class="text-sm text-red-600 bg-red-50 rounded-lg px-3 py-2">{error}</p>
+				<ErrorMessage message={error} />
 			{/if}
-			<button
-				type="submit"
-				disabled={loading}
-				class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 rounded-xl text-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-			>
+			<Button type="submit" disabled={loading} fullWidth>
 				{loading ? 'Connexion...' : 'Se connecter'}
-			</button>
+			</Button>
 		</form>
 	{:else}
 		<form onsubmit={handleMagicLink} class="space-y-4">
-			<div>
-				<label for="email-magic" class="block text-sm font-medium text-slate-700 mb-1.5"
-					>Email</label
-				>
-				<input
+			<FormField label="Email" id="email-magic">
+				<Input
 					id="email-magic"
 					type="email"
 					bind:value={email}
 					required
 					placeholder="vous@exemple.fr"
-					class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent placeholder:text-slate-400"
 				/>
-			</div>
+			</FormField>
 			{#if error}
-				<p class="text-sm text-red-600 bg-red-50 rounded-lg px-3 py-2">{error}</p>
+				<ErrorMessage message={error} />
 			{/if}
-			<button
-				type="submit"
-				disabled={loading}
-				class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 rounded-xl text-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-			>
+			<Button type="submit" disabled={loading} fullWidth>
 				{loading ? 'Envoi...' : 'Envoyer le lien de connexion'}
-			</button>
+			</Button>
 		</form>
 	{/if}
 </div>

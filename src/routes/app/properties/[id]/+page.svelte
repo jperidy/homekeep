@@ -1,7 +1,25 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
-	import { ArrowLeft, Plus, Wrench, MapPin, CheckCircle, Clock, AlertCircle } from '@lucide/svelte';
+	import {
+		ArrowLeft,
+		Plus,
+		Wrench,
+		MapPin,
+		CheckCircle,
+		Clock,
+		AlertCircle
+	} from '@lucide/svelte';
 	import type { ActionData, PageData } from './$types';
+	import {
+		Button,
+		Card,
+		CardHeader,
+		ErrorMessage,
+		EmptyState,
+		IconBox,
+		Badge,
+		BackLink
+	} from '$lib/components/ui';
 
 	let { data, form }: { data: PageData; form: ActionData } = $props();
 
@@ -11,13 +29,7 @@
 </script>
 
 <div>
-	<a
-		href="/app"
-		class="inline-flex items-center gap-1.5 text-sm text-slate-500 hover:text-slate-700 mb-6 transition-colors"
-	>
-		<ArrowLeft class="w-4 h-4" />
-		Tableau de bord
-	</a>
+	<BackLink href="/app" label="Tableau de bord" />
 
 	<div class="flex items-start justify-between mb-6">
 		<div>
@@ -29,23 +41,20 @@
 				</p>
 			{/if}
 		</div>
-		<a
-			href="/app/properties/{data.property.id}/equipment/new"
-			class="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-medium px-4 py-2.5 rounded-xl text-sm transition-colors"
-		>
+		<Button href="/app/properties/{data.property.id}/equipment/new">
 			<Plus class="w-4 h-4" />
 			Ajouter un équipement
-		</a>
+		</Button>
 	</div>
 
 	{#if form && 'taskError' in form}
-		<p class="text-sm text-red-600 bg-red-50 rounded-xl px-4 py-3 mb-4">{form.taskError}</p>
+		<ErrorMessage message={String(form.taskError)} class="rounded-xl px-4 py-3 mb-4" />
 	{/if}
 
 	<!-- Maintenance tasks -->
 	{#if data.tasks.length > 0}
-		<div class="bg-white rounded-2xl border border-slate-100 overflow-hidden mb-4">
-			<div class="px-5 py-4 border-b border-slate-100 flex items-center justify-between">
+		<Card class="mb-4">
+			<CardHeader>
 				<div>
 					<h2 class="font-semibold text-slate-900">Planning de maintenance</h2>
 					<p class="text-xs text-slate-500 mt-0.5">
@@ -56,10 +65,8 @@
 						{#if upcoming.length > 0}{upcoming.length} à venir{/if}
 					</p>
 				</div>
-				<div class="w-9 h-9 rounded-xl bg-amber-50 flex items-center justify-center shrink-0">
-					<Clock class="w-4.5 h-4.5 text-amber-600" strokeWidth={1.5} />
-				</div>
-			</div>
+				<IconBox icon={Clock} color="amber" size="sm" />
+			</CardHeader>
 
 			{#if overdue.length > 0}
 				<div class="px-5 pt-4 pb-3">
@@ -81,14 +88,10 @@
 								</div>
 								<form method="POST" action="?/completeTask" use:enhance class="shrink-0">
 									<input type="hidden" name="taskId" value={task.id} />
-									<button
-										type="submit"
-										title="Marquer comme fait"
-										class="inline-flex items-center gap-1.5 bg-white hover:bg-green-50 border border-slate-200 hover:border-green-300 text-slate-600 hover:text-green-700 font-medium px-3 py-1.5 rounded-lg text-xs transition-colors"
-									>
+									<Button type="submit" variant="success" size="xs" title="Marquer comme fait">
 										<CheckCircle class="w-3.5 h-3.5" />
 										Fait
-									</button>
+									</Button>
 								</form>
 							</li>
 						{/each}
@@ -111,58 +114,46 @@
 								</div>
 								<form method="POST" action="?/completeTask" use:enhance class="shrink-0">
 									<input type="hidden" name="taskId" value={task.id} />
-									<button
-										type="submit"
-										title="Marquer comme fait"
-										class="inline-flex items-center gap-1.5 bg-white hover:bg-green-50 border border-slate-200 hover:border-green-300 text-slate-600 hover:text-green-700 font-medium px-3 py-1.5 rounded-lg text-xs transition-colors"
-									>
+									<Button type="submit" variant="success" size="xs" title="Marquer comme fait">
 										<CheckCircle class="w-3.5 h-3.5" />
 										Fait
-									</button>
+									</Button>
 								</form>
 							</li>
 						{/each}
 					</ul>
 				</div>
 			{/if}
-		</div>
+		</Card>
 	{/if}
 
 	<!-- Equipment list -->
 	{#if data.property.equipments.length === 0}
-		<div class="bg-white rounded-2xl border border-slate-100 p-10 text-center">
-			<div class="w-14 h-14 bg-blue-50 rounded-2xl flex items-center justify-center mx-auto mb-4">
-				<Wrench class="w-7 h-7 text-blue-600" strokeWidth={1.5} />
-			</div>
-			<h2 class="text-base font-semibold text-slate-900 mb-2">Aucun équipement</h2>
-			<p class="text-sm text-slate-500 mb-5 max-w-xs mx-auto">
-				Ajoutez vos équipements pour générer votre planning de maintenance.
-			</p>
-			<a
-				href="/app/properties/{data.property.id}/equipment/new"
-				class="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-medium px-4 py-2.5 rounded-xl text-sm transition-colors"
-			>
-				<Plus class="w-4 h-4" />
-				Ajouter un équipement
-			</a>
-		</div>
+		<EmptyState
+			icon={Wrench}
+			title="Aucun équipement"
+			description="Ajoutez vos équipements pour générer votre planning de maintenance."
+		>
+			{#snippet action()}
+				<Button href="/app/properties/{data.property.id}/equipment/new">
+					<Plus class="w-4 h-4" />
+					Ajouter un équipement
+				</Button>
+			{/snippet}
+		</EmptyState>
 	{:else}
-		<div class="bg-white rounded-2xl border border-slate-100 overflow-hidden">
-			<div class="px-5 py-4 border-b border-slate-100">
+		<Card>
+			<CardHeader>
 				<h2 class="font-semibold text-slate-900">
 					{data.property.equipments.length} équipement{data.property.equipments.length !== 1
 						? 's'
 						: ''}
 				</h2>
-			</div>
+			</CardHeader>
 			<ul class="divide-y divide-slate-50">
 				{#each data.property.equipments as equipment}
 					<li class="px-5 py-4 flex items-center gap-4">
-						<div
-							class="w-10 h-10 bg-slate-100 rounded-xl flex items-center justify-center shrink-0"
-						>
-							<Wrench class="w-5 h-5 text-slate-500" strokeWidth={1.5} />
-						</div>
+						<IconBox icon={Wrench} color="slate" />
 						<div class="flex-1 min-w-0">
 							<p class="font-medium text-slate-900 truncate">{equipment.name}</p>
 							<p class="text-xs text-slate-500 mt-0.5">
@@ -180,6 +171,6 @@
 					</li>
 				{/each}
 			</ul>
-		</div>
+		</Card>
 	{/if}
 </div>

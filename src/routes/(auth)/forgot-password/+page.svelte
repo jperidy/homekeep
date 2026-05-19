@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { Mail } from '@lucide/svelte';
 	import { authClient } from '$lib/auth-client';
+	import { Button, Input, FormField, ErrorMessage } from '$lib/components/ui';
 
 	let email = $state('');
 	let loading = $state(false);
@@ -11,7 +12,7 @@
 		e.preventDefault();
 		loading = true;
 		error = '';
-		const res = await authClient.forgetPassword({ email, redirectTo: '/reset-password' });
+		const res = await authClient.requestPasswordReset({ email, redirectTo: '/reset-password' });
 		if (res.error) {
 			error = res.error.message ?? 'Une erreur est survenue.';
 		} else {
@@ -29,7 +30,9 @@
 
 	{#if sent}
 		<div class="text-center py-4">
-			<div class="w-12 h-12 bg-green-50 rounded-full flex items-center justify-center mx-auto mb-3">
+			<div
+				class="w-12 h-12 bg-green-50 rounded-full flex items-center justify-center mx-auto mb-3"
+			>
 				<Mail class="w-6 h-6 text-green-600" />
 			</div>
 			<p class="font-medium text-slate-800">Vérifiez votre boîte mail</p>
@@ -43,31 +46,19 @@
 		</div>
 	{:else}
 		<form onsubmit={handleSubmit} class="space-y-4">
-			<div>
-				<label for="email" class="block text-sm font-medium text-slate-700 mb-1.5">Email</label>
-				<input
-					id="email"
-					type="email"
-					bind:value={email}
-					required
-					placeholder="vous@exemple.fr"
-					class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent placeholder:text-slate-400"
-				/>
-			</div>
+			<FormField label="Email" id="email">
+				<Input id="email" type="email" bind:value={email} required placeholder="vous@exemple.fr" />
+			</FormField>
 			{#if error}
-				<p class="text-sm text-red-600 bg-red-50 rounded-lg px-3 py-2">{error}</p>
+				<ErrorMessage message={error} />
 			{/if}
-			<button
-				type="submit"
-				disabled={loading}
-				class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 rounded-xl text-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-			>
+			<Button type="submit" disabled={loading} fullWidth>
 				{loading ? 'Envoi en cours…' : 'Envoyer le lien'}
-			</button>
+			</Button>
 			<p class="text-center">
-				<a href="/login" class="text-sm text-slate-500 hover:text-slate-700"
-					>Retour à la connexion</a
-				>
+				<a href="/login" class="text-sm text-slate-500 hover:text-slate-700">
+					Retour à la connexion
+				</a>
 			</p>
 		</form>
 	{/if}

@@ -2,6 +2,7 @@
 	import { Mail } from '@lucide/svelte';
 	import { signUp, signIn } from '$lib/auth-client';
 	import { env } from '$env/dynamic/public';
+	import { Button, Input, FormField, ErrorMessage } from '$lib/components/ui';
 
 	const googleEnabled = env.PUBLIC_GOOGLE_ENABLED === 'true';
 
@@ -40,7 +41,9 @@
 
 	{#if success}
 		<div class="text-center py-4">
-			<div class="w-12 h-12 bg-green-50 rounded-full flex items-center justify-center mx-auto mb-3">
+			<div
+				class="w-12 h-12 bg-green-50 rounded-full flex items-center justify-center mx-auto mb-3"
+			>
 				<Mail class="w-6 h-6 text-green-600" />
 			</div>
 			<p class="font-medium text-slate-800">Vérifiez votre boîte mail</p>
@@ -85,53 +88,28 @@
 		{/if}
 
 		<form onsubmit={handleRegister} class="space-y-4">
-			<div>
-				<label for="name" class="block text-sm font-medium text-slate-700 mb-1.5">Nom complet</label
-				>
-				<input
-					id="name"
-					type="text"
-					bind:value={name}
-					required
-					placeholder="Jean Dupont"
-					class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent placeholder:text-slate-400"
-				/>
-			</div>
-			<div>
-				<label for="email" class="block text-sm font-medium text-slate-700 mb-1.5">Email</label>
-				<input
-					id="email"
-					type="email"
-					bind:value={email}
-					required
-					placeholder="vous@exemple.fr"
-					class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent placeholder:text-slate-400"
-				/>
-			</div>
-			<div>
-				<label for="password" class="block text-sm font-medium text-slate-700 mb-1.5"
-					>Mot de passe</label
-				>
-				<input
+			<FormField label="Nom complet" id="name">
+				<Input id="name" type="text" bind:value={name} required placeholder="Jean Dupont" />
+			</FormField>
+			<FormField label="Email" id="email">
+				<Input id="email" type="email" bind:value={email} required placeholder="vous@exemple.fr" />
+			</FormField>
+			<FormField label="Mot de passe" id="password">
+				<Input
 					id="password"
 					type="password"
 					bind:value={password}
 					required
 					minlength={8}
 					placeholder="8 caractères minimum"
-					class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent placeholder:text-slate-400"
 				/>
-			</div>
+			</FormField>
 			{#if error}
-				<p class="text-sm text-red-600 bg-red-50 rounded-lg px-3 py-2">{error}</p>
+				<ErrorMessage message={error} />
 			{/if}
-			<button
-				type="submit"
-				disabled={loading}
-				class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 rounded-xl text-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-			>
+			<Button type="submit" disabled={loading} fullWidth>
 				{loading ? 'Création...' : 'Créer mon compte'}
-			</button>
+			</Button>
 			<p class="text-xs text-center text-slate-400">
 				En créant un compte, vous acceptez nos
 				<a href="/terms" class="underline hover:text-slate-600">conditions d'utilisation</a>.
