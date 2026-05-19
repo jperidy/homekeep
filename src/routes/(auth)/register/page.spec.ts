@@ -105,8 +105,9 @@ describe('RegisterPage', () => {
 
 	it('contains a link to the terms of service', () => {
 		render(RegisterPage);
-		expect(
-			screen.getByRole('link', { name: /conditions d'utilisation/i })
-		).toHaveAttribute('href', '/terms');
+		expect(screen.getByRole('link', { name: /conditions d'utilisation/i })).toHaveAttribute(
+			'href',
+			'/terms'
+		);
 	});
 });

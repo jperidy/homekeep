@@ -19,7 +19,9 @@
 				<ShieldCheck class="w-5 h-5 text-violet-600" />
 				<h1 class="text-xl font-bold text-slate-900">Types d'équipement</h1>
 			</div>
-			<p class="text-sm text-slate-500">{data.types.length} type{data.types.length !== 1 ? 's' : ''} au catalogue</p>
+			<p class="text-sm text-slate-500">
+				{data.types.length} type{data.types.length !== 1 ? 's' : ''} au catalogue
+			</p>
 		</div>
 		<a
 			href="/app/admin/equipment-types/new"

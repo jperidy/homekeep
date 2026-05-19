@@ -15,7 +15,10 @@
 <div class="min-h-screen bg-slate-50">
 	<header class="bg-white border-b border-slate-100 sticky top-0 z-40">
 		<div class="max-w-7xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
-			<a href="/app" class="flex items-center gap-2 text-blue-600 hover:text-blue-700 transition-colors">
+			<a
+				href="/app"
+				class="flex items-center gap-2 text-blue-600 hover:text-blue-700 transition-colors"
+			>
 				<Logo class="w-6 h-6" />
 				<span class="text-lg font-bold tracking-tight text-slate-900">HomeKeep</span>
 			</a>

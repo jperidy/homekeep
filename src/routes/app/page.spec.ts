@@ -35,7 +35,7 @@ describe('/app dashboard — load', () => {
 	it('sums equipment counts across all properties', async () => {
 		mocks.propertyFindMany.mockResolvedValueOnce([
 			{ id: 'p-1', name: 'Apartment', _count: { equipments: 3 } },
-			{ id: 'p-2', name: 'House',     _count: { equipments: 5 } }
+			{ id: 'p-2', name: 'House', _count: { equipments: 5 } }
 		]);
 		mocks.taskCount.mockResolvedValueOnce(0);
 		const result = await load(makeEvent());

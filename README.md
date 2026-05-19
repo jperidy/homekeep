@@ -44,11 +44,11 @@ pnpm docker:build
 
 Docker Compose démarre trois services :
 
-| Service | URL |
-|---------|-----|
-| App SvelteKit | http://localhost:5173 |
+| Service                  | URL                   |
+| ------------------------ | --------------------- |
+| App SvelteKit            | http://localhost:5173 |
 | Interface mail (Mailpit) | http://localhost:8025 |
-| PostgreSQL | localhost:5432 |
+| PostgreSQL               | localhost:5432        |
 
 Les migrations de base de données sont appliquées automatiquement au démarrage.
 
@@ -60,9 +60,9 @@ pnpm seed
 
 Crée un compte admin, provisionne le catalogue d'équipements et génère une propriété de démonstration avec des tâches de maintenance :
 
-| Compte | Email | Mot de passe |
-|--------|-------|--------------|
-| Admin  | `admin@homekeep.dev` | `admin1234` |
+| Compte | Email                | Mot de passe |
+| ------ | -------------------- | ------------ |
+| Admin  | `admin@homekeep.dev` | `admin1234`  |
 
 La propriété démo **Mon appartement de test** est créée pour le compte admin, avec 3 équipements et un mix de tâches en retard et à venir pour tester le planning.
 
@@ -74,18 +74,18 @@ Le seed est **idempotent** : il peut être relancé sans risque de doublons.
 
 Le fichier `.env` est lu par Docker Compose et transmis au container.
 
-| Variable | Obligatoire | Description |
-|----------|-------------|-------------|
-| `BETTER_AUTH_SECRET` | ✅ | Clé secrète pour les sessions (`openssl rand -base64 32`) |
-| `DATABASE_URL` | ✅ | URL PostgreSQL (pré-remplie pour Docker) |
-| `BETTER_AUTH_URL` | — | URL serveur de l'app (défaut : `http://localhost:5173`) |
-| `PUBLIC_BETTER_AUTH_URL` | — | URL navigateur de l'app (défaut : `http://localhost:5173`) |
-| `SMTP_HOST` | — | Hôte SMTP (défaut : `mailpit` via Docker) |
-| `SMTP_PORT` | — | Port SMTP (défaut : `1025`) |
-| `SMTP_FROM` | — | Adresse expéditeur des emails |
-| `GOOGLE_CLIENT_ID` | — | OAuth Google (optionnel) |
-| `GOOGLE_CLIENT_SECRET` | — | OAuth Google (optionnel) |
-| `PUBLIC_GOOGLE_ENABLED` | — | Afficher le bouton Google (`true`/`false`) |
+| Variable                 | Obligatoire | Description                                                |
+| ------------------------ | ----------- | ---------------------------------------------------------- |
+| `BETTER_AUTH_SECRET`     | ✅          | Clé secrète pour les sessions (`openssl rand -base64 32`)  |
+| `DATABASE_URL`           | ✅          | URL PostgreSQL (pré-remplie pour Docker)                   |
+| `BETTER_AUTH_URL`        | —           | URL serveur de l'app (défaut : `http://localhost:5173`)    |
+| `PUBLIC_BETTER_AUTH_URL` | —           | URL navigateur de l'app (défaut : `http://localhost:5173`) |
+| `SMTP_HOST`              | —           | Hôte SMTP (défaut : `mailpit` via Docker)                  |
+| `SMTP_PORT`              | —           | Port SMTP (défaut : `1025`)                                |
+| `SMTP_FROM`              | —           | Adresse expéditeur des emails                              |
+| `GOOGLE_CLIENT_ID`       | —           | OAuth Google (optionnel)                                   |
+| `GOOGLE_CLIENT_SECRET`   | —           | OAuth Google (optionnel)                                   |
+| `PUBLIC_GOOGLE_ENABLED`  | —           | Afficher le bouton Google (`true`/`false`)                 |
 
 ---
 
@@ -205,10 +205,10 @@ En développement, tous les emails sont capturés par **Mailpit** : http://local
 
 La sécurité est factoriée via le système de **layouts SvelteKit** : chaque layout protège automatiquement toutes les routes enfants.
 
-| Layout | Garde | Comportement si rejeté |
-|--------|-------|------------------------|
-| `/app/+layout.server.ts` | Session valide requise | Redirect → `/login` |
-| `/app/admin/+layout.server.ts` | Rôle `ADMIN` requis | Redirect → `/app` |
+| Layout                         | Garde                  | Comportement si rejeté |
+| ------------------------------ | ---------------------- | ---------------------- |
+| `/app/+layout.server.ts`       | Session valide requise | Redirect → `/login`    |
+| `/app/admin/+layout.server.ts` | Rôle `ADMIN` requis    | Redirect → `/app`      |
 
 Les pages individuelles gèrent uniquement les vérifications de **propriété des ressources** (ex : une propriété appartient bien à l'utilisateur courant), ce qui est distinct de l'authentification/autorisation.
 
@@ -222,17 +222,17 @@ Les tests sont co-localisés avec les fichiers sources (convention `.spec.ts`, s
 pnpm test
 ```
 
-| Fichier | Ce qui est testé |
-|---------|-----------------|
-| `src/lib/server/mailer.spec.ts` | Envoi d'emails, propagation d'erreurs SMTP |
-| `src/lib/server/maintenance.spec.ts` | `getNextDueDate` (logique d'échéance), `generatePlan` (création plan + tâches) |
-| `src/routes/(auth)/login/page.spec.ts` | Formulaire, mode magic link, messages d'erreur |
-| `src/routes/(auth)/register/page.spec.ts` | Inscription, état succès, validation, liens |
-| `src/routes/app/layout.server.spec.ts` | **Guard auth** : session requise, flag `isAdmin` |
-| `src/routes/app/page.spec.ts` | Dashboard : comptage équipements, tâches en attente |
-| `src/routes/app/admin/layout.server.spec.ts` | **Guard rôle** : ADMIN requis, rejet USER/null |
-| `src/routes/app/properties/new/page.spec.ts` | Action création propriété (validation, redirect) |
-| `src/routes/app/properties/[id]/page.spec.ts` | Load propriété + tâches, action `completeTask` |
-| `src/routes/app/admin/equipment-types/new/page.spec.ts` | Action création type (validation, unicité, UI) |
-| `src/routes/app/admin/equipment-types/[id]/edit/page.spec.ts` | Actions update, delete, addRule, deleteRule |
-| `src/routes/app/properties/[id]/equipment/new/page.spec.ts` | Action ajout équipement + génération du plan (validation, redirect, UI) |
+| Fichier                                                       | Ce qui est testé                                                               |
+| ------------------------------------------------------------- | ------------------------------------------------------------------------------ |
+| `src/lib/server/mailer.spec.ts`                               | Envoi d'emails, propagation d'erreurs SMTP                                     |
+| `src/lib/server/maintenance.spec.ts`                          | `getNextDueDate` (logique d'échéance), `generatePlan` (création plan + tâches) |
+| `src/routes/(auth)/login/page.spec.ts`                        | Formulaire, mode magic link, messages d'erreur                                 |
+| `src/routes/(auth)/register/page.spec.ts`                     | Inscription, état succès, validation, liens                                    |
+| `src/routes/app/layout.server.spec.ts`                        | **Guard auth** : session requise, flag `isAdmin`                               |
+| `src/routes/app/page.spec.ts`                                 | Dashboard : comptage équipements, tâches en attente                            |
+| `src/routes/app/admin/layout.server.spec.ts`                  | **Guard rôle** : ADMIN requis, rejet USER/null                                 |
+| `src/routes/app/properties/new/page.spec.ts`                  | Action création propriété (validation, redirect)                               |
+| `src/routes/app/properties/[id]/page.spec.ts`                 | Load propriété + tâches, action `completeTask`                                 |
+| `src/routes/app/admin/equipment-types/new/page.spec.ts`       | Action création type (validation, unicité, UI)                                 |
+| `src/routes/app/admin/equipment-types/[id]/edit/page.spec.ts` | Actions update, delete, addRule, deleteRule                                    |
+| `src/routes/app/properties/[id]/equipment/new/page.spec.ts`   | Action ajout équipement + génération du plan (validation, redirect, UI)        |

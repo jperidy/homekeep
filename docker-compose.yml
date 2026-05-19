@@ -4,22 +4,22 @@ services:
       context: .
       dockerfile: Dockerfile.dev
     ports:
-      - "5173:5173"
+      - '5173:5173'
     volumes:
       - .:/app
-      - /app/node_modules   # volume anonyme : protège les node_modules du container
+      - /app/node_modules # volume anonyme : protège les node_modules du container
     environment:
       DATABASE_URL: postgresql://homekeep:homekeep@db:5432/homekeep
       SMTP_HOST: mailpit
-      SMTP_PORT: "1025"
-      SMTP_FROM: "${SMTP_FROM:-HomeKeep <noreply@homekeep.app>}"
-      BETTER_AUTH_SECRET: "${BETTER_AUTH_SECRET}"
-      BETTER_AUTH_URL: "${BETTER_AUTH_URL:-http://localhost:5173}"
-      PUBLIC_BETTER_AUTH_URL: "${PUBLIC_BETTER_AUTH_URL:-http://localhost:5173}"
-      PUBLIC_GOOGLE_ENABLED: "${PUBLIC_GOOGLE_ENABLED:-false}"
-      GOOGLE_CLIENT_ID: "${GOOGLE_CLIENT_ID:-}"
-      GOOGLE_CLIENT_SECRET: "${GOOGLE_CLIENT_SECRET:-}"
-      CI: "true"
+      SMTP_PORT: '1025'
+      SMTP_FROM: '${SMTP_FROM:-HomeKeep <noreply@homekeep.app>}'
+      BETTER_AUTH_SECRET: '${BETTER_AUTH_SECRET}'
+      BETTER_AUTH_URL: '${BETTER_AUTH_URL:-http://localhost:5173}'
+      PUBLIC_BETTER_AUTH_URL: '${PUBLIC_BETTER_AUTH_URL:-http://localhost:5173}'
+      PUBLIC_GOOGLE_ENABLED: '${PUBLIC_GOOGLE_ENABLED:-false}'
+      GOOGLE_CLIENT_ID: '${GOOGLE_CLIENT_ID:-}'
+      GOOGLE_CLIENT_SECRET: '${GOOGLE_CLIENT_SECRET:-}'
+      CI: 'true'
     depends_on:
       db:
         condition: service_healthy
@@ -31,11 +31,11 @@ services:
       POSTGRES_USER: homekeep
       POSTGRES_PASSWORD: homekeep
     ports:
-      - "5432:5432"
+      - '5432:5432'
     volumes:
       - pgdata:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U homekeep"]
+      test: ['CMD-SHELL', 'pg_isready -U homekeep']
       interval: 5s
       timeout: 5s
       retries: 5
@@ -43,8 +43,8 @@ services:
   mailpit:
     image: axllent/mailpit
     ports:
-      - "1025:1025"
-      - "8025:8025"
+      - '1025:1025'
+      - '8025:8025'
 
 volumes:
   pgdata:

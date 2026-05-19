@@ -34,7 +34,7 @@
 			</div>
 			<p class="font-medium text-slate-800">Vérifiez votre boîte mail</p>
 			<p class="text-sm text-slate-500 mt-1">
-				Un lien de réinitialisation a été envoyé à <strong>{email}</strong>.<br/>
+				Un lien de réinitialisation a été envoyé à <strong>{email}</strong>.<br />
 				Ce lien expire dans 1 heure.
 			</p>
 			<a href="/login" class="inline-block text-sm text-blue-600 hover:underline mt-4">
@@ -65,7 +65,9 @@
 				{loading ? 'Envoi en cours…' : 'Envoyer le lien'}
 			</button>
 			<p class="text-center">
-				<a href="/login" class="text-sm text-slate-500 hover:text-slate-700">Retour à la connexion</a>
+				<a href="/login" class="text-sm text-slate-500 hover:text-slate-700"
+					>Retour à la connexion</a
+				>
 			</p>
 		</form>
 	{/if}

@@ -31,8 +31,10 @@ export const actions = {
 		const installedAtRaw = data.get('installedAt')?.toString();
 		const installedAt = installedAtRaw ? new Date(installedAtRaw) : null;
 
-		if (!name) return fail(400, { error: 'Le nom est requis.', name, equipmentTypeId, brand, model });
-		if (!equipmentTypeId) return fail(400, { error: 'Le type est requis.', name, equipmentTypeId, brand, model });
+		if (!name)
+			return fail(400, { error: 'Le nom est requis.', name, equipmentTypeId, brand, model });
+		if (!equipmentTypeId)
+			return fail(400, { error: 'Le type est requis.', name, equipmentTypeId, brand, model });
 
 		const equipment = await prisma.equipment.create({
 			data: { propertyId: params.id, equipmentTypeId, name, brand, model, installedAt }

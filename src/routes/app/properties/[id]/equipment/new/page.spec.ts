@@ -23,7 +23,14 @@ vi.mock('$lib/server/maintenance', () => ({
 
 import { actions } from './+page.server';
 
-const PROPERTY = { id: 'prop-1', name: 'My apartment', userId: 'user-1', createdAt: new Date(), updatedAt: new Date(), address: null };
+const PROPERTY = {
+	id: 'prop-1',
+	name: 'My apartment',
+	userId: 'user-1',
+	createdAt: new Date(),
+	updatedAt: new Date(),
+	address: null
+};
 
 function makeEvent(fields: Record<string, string>, userId = 'user-1', propertyId = 'prop-1') {
 	const formData = new FormData();
@@ -59,13 +66,15 @@ describe('equipment/new — action', () => {
 		const createdAt = new Date('2023-01-15');
 		mocks.equipmentCreate.mockResolvedValueOnce({ id: 'eq-1', createdAt });
 		await expect(
-			actions.default(makeEvent({
-				name: 'Main boiler',
-				equipmentTypeId: 'et-1',
-				brand: 'Viessmann',
-				model: 'Vitodens 100',
-				installedAt: '2023-01-15'
-			}))
+			actions.default(
+				makeEvent({
+					name: 'Main boiler',
+					equipmentTypeId: 'et-1',
+					brand: 'Viessmann',
+					model: 'Vitodens 100',
+					installedAt: '2023-01-15'
+				})
+			)
 		).rejects.toMatchObject({ status: 302, location: '/app/properties/prop-1' });
 		expect(mocks.equipmentCreate).toHaveBeenCalledWith({
 			data: {
@@ -117,11 +126,36 @@ describe('equipment/new — action', () => {
 // --- UI tests ---
 
 const EQUIPMENT_TYPES = [
-	{ id: 'et-1', name: 'Gas boiler', category: 'Chauffage', createdAt: new Date(), updatedAt: new Date(), description: null, imageUrl: null },
-	{ id: 'et-2', name: 'Heat recovery ventilation', category: 'Ventilation', createdAt: new Date(), updatedAt: new Date(), description: null, imageUrl: null }
+	{
+		id: 'et-1',
+		name: 'Gas boiler',
+		category: 'Chauffage',
+		createdAt: new Date(),
+		updatedAt: new Date(),
+		description: null,
+		imageUrl: null
+	},
+	{
+		id: 'et-2',
+		name: 'Heat recovery ventilation',
+		category: 'Ventilation',
+		createdAt: new Date(),
+		updatedAt: new Date(),
+		description: null,
+		imageUrl: null
+	}
 ];
 
-const USER = { id: 'user-1', email: 'test@example.com', emailVerified: false, name: 'Test User', image: null, role: 'USER', createdAt: new Date(), updatedAt: new Date() };
+const USER = {
+	id: 'user-1',
+	email: 'test@example.com',
+	emailVerified: false,
+	name: 'Test User',
+	image: null,
+	role: 'USER',
+	createdAt: new Date(),
+	updatedAt: new Date()
+};
 
 describe('equipment/new — page', () => {
 	it('renders form fields when equipment types are available', () => {
@@ -150,7 +184,13 @@ describe('equipment/new — page', () => {
 	it('shows error message from action data', () => {
 		render(Page, {
 			props: {
-				form: { error: 'Le nom est requis.', name: '', equipmentTypeId: '', brand: null, model: null },
+				form: {
+					error: 'Le nom est requis.',
+					name: '',
+					equipmentTypeId: '',
+					brand: null,
+					model: null
+				},
 				data: { user: USER, isAdmin: false, property: PROPERTY, equipmentTypes: EQUIPMENT_TYPES }
 			}
 		});

@@ -9,8 +9,15 @@
 	let addingRule = $state(false);
 
 	const CATEGORIES = [
-		'Chauffage', 'Plomberie', 'Électricité', 'Ventilation',
-		'Toiture', 'Extérieur', 'Sécurité', 'Cuisine', 'Autre'
+		'Chauffage',
+		'Plomberie',
+		'Électricité',
+		'Ventilation',
+		'Toiture',
+		'Extérieur',
+		'Sécurité',
+		'Cuisine',
+		'Autre'
 	];
 
 	function intervalLabel(weeks: number): string {
@@ -43,7 +50,10 @@
 			action="?/update"
 			use:enhance={() => {
 				loading = true;
-				return async ({ update }) => { await update(); loading = false; };
+				return async ({ update }) => {
+					await update();
+					loading = false;
+				};
 			}}
 			class="space-y-4"
 		>
@@ -109,10 +119,14 @@
 		<div class="flex items-center justify-between mb-4">
 			<div>
 				<h2 class="font-semibold text-slate-900">Règles de maintenance</h2>
-				<p class="text-xs text-slate-500 mt-0.5">Fréquences d'entretien recommandées pour ce type.</p>
+				<p class="text-xs text-slate-500 mt-0.5">
+					Fréquences d'entretien recommandées pour ce type.
+				</p>
 			</div>
 			<span class="text-xs font-medium text-violet-600 bg-violet-50 px-2 py-1 rounded-lg">
-				{data.type.maintenanceRules.length} règle{data.type.maintenanceRules.length !== 1 ? 's' : ''}
+				{data.type.maintenanceRules.length} règle{data.type.maintenanceRules.length !== 1
+					? 's'
+					: ''}
 			</span>
 		</div>
 
@@ -121,7 +135,9 @@
 				{#each data.type.maintenanceRules as rule}
 					<li class="flex items-start justify-between gap-3 py-3 first:pt-0 last:pb-0">
 						<div class="flex items-start gap-2.5 flex-1 min-w-0">
-							<div class="w-7 h-7 rounded-lg bg-violet-50 flex items-center justify-center shrink-0 mt-0.5">
+							<div
+								class="w-7 h-7 rounded-lg bg-violet-50 flex items-center justify-center shrink-0 mt-0.5"
+							>
 								<Clock class="w-3.5 h-3.5 text-violet-600" strokeWidth={1.5} />
 							</div>
 							<div class="min-w-0">
@@ -157,7 +173,10 @@
 			action="?/addRule"
 			use:enhance={() => {
 				addingRule = true;
-				return async ({ update }) => { await update(); addingRule = false; };
+				return async ({ update }) => {
+					await update();
+					addingRule = false;
+				};
 			}}
 			class="border border-dashed border-slate-200 rounded-xl p-4 space-y-3"
 		>
@@ -182,7 +201,10 @@
 							required
 							class="w-full px-3 py-2 rounded-lg border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent pr-14"
 						/>
-						<span class="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-slate-400 pointer-events-none">sem.</span>
+						<span
+							class="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-slate-400 pointer-events-none"
+							>sem.</span
+						>
 					</div>
 				</div>
 			</div>
@@ -217,7 +239,10 @@
 			action="?/delete"
 			use:enhance={() => {
 				deleting = true;
-				return async ({ update }) => { await update(); deleting = false; };
+				return async ({ update }) => {
+					await update();
+					deleting = false;
+				};
 			}}
 		>
 			<button

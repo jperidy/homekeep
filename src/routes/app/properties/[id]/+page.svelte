@@ -6,8 +6,8 @@
 	let { data, form }: { data: PageData; form: ActionData } = $props();
 
 	const now = new Date();
-	const overdue = $derived(data.tasks.filter(t => new Date(t.dueDate) < now));
-	const upcoming = $derived(data.tasks.filter(t => new Date(t.dueDate) >= now));
+	const overdue = $derived(data.tasks.filter((t) => new Date(t.dueDate) < now));
+	const upcoming = $derived(data.tasks.filter((t) => new Date(t.dueDate) >= now));
 </script>
 
 <div>
@@ -63,7 +63,9 @@
 
 			{#if overdue.length > 0}
 				<div class="px-5 pt-4 pb-3">
-					<p class="text-xs font-semibold text-red-500 uppercase tracking-wide mb-3 flex items-center gap-1.5">
+					<p
+						class="text-xs font-semibold text-red-500 uppercase tracking-wide mb-3 flex items-center gap-1.5"
+					>
 						<AlertCircle class="w-3.5 h-3.5" />
 						En retard
 					</p>
@@ -148,13 +150,17 @@
 		<div class="bg-white rounded-2xl border border-slate-100 overflow-hidden">
 			<div class="px-5 py-4 border-b border-slate-100">
 				<h2 class="font-semibold text-slate-900">
-					{data.property.equipments.length} équipement{data.property.equipments.length !== 1 ? 's' : ''}
+					{data.property.equipments.length} équipement{data.property.equipments.length !== 1
+						? 's'
+						: ''}
 				</h2>
 			</div>
 			<ul class="divide-y divide-slate-50">
 				{#each data.property.equipments as equipment}
 					<li class="px-5 py-4 flex items-center gap-4">
-						<div class="w-10 h-10 bg-slate-100 rounded-xl flex items-center justify-center shrink-0">
+						<div
+							class="w-10 h-10 bg-slate-100 rounded-xl flex items-center justify-center shrink-0"
+						>
 							<Wrench class="w-5 h-5 text-slate-500" strokeWidth={1.5} />
 						</div>
 						<div class="flex-1 min-w-0">

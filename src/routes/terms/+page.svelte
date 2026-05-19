@@ -6,7 +6,10 @@
 <div class="min-h-screen bg-white">
 	<header class="border-b border-slate-100">
 		<div class="max-w-4xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
-			<a href="/" class="flex items-center gap-2 text-blue-600 hover:text-blue-700 transition-colors">
+			<a
+				href="/"
+				class="flex items-center gap-2 text-blue-600 hover:text-blue-700 transition-colors"
+			>
 				<Logo class="w-6 h-6" />
 				<span class="text-lg font-bold tracking-tight text-slate-900">HomeKeep</span>
 			</a>
@@ -23,13 +26,12 @@
 		</div>
 
 		<div class="prose prose-slate max-w-none space-y-8 text-slate-600 leading-relaxed">
-
 			<section>
 				<h2 class="text-lg font-semibold text-slate-800 mb-3">1. Objet</h2>
 				<p>
 					HomeKeep est une application de gestion de la maintenance résidentielle. Les présentes
-					conditions d'utilisation régissent l'accès et l'utilisation du service proposé par HomeKeep.
-					En créant un compte, vous acceptez ces conditions dans leur intégralité.
+					conditions d'utilisation régissent l'accès et l'utilisation du service proposé par
+					HomeKeep. En créant un compte, vous acceptez ces conditions dans leur intégralité.
 				</p>
 			</section>
 
@@ -61,13 +63,15 @@
 				<h2 class="text-lg font-semibold text-slate-800 mb-3">4. Données personnelles</h2>
 				<p>
 					HomeKeep collecte et traite vos données personnelles (nom, email, données de votre
-					logement) dans le seul but de vous fournir le service. Vos données ne sont jamais
-					vendues à des tiers.
+					logement) dans le seul but de vous fournir le service. Vos données ne sont jamais vendues
+					à des tiers.
 				</p>
 				<p class="mt-3">
-					Conformément au RGPD, vous disposez d'un droit d'accès, de rectification et de
-					suppression de vos données. Pour exercer ces droits, contactez-nous à
-					<a href="mailto:privacy@homekeep.app" class="text-blue-600 hover:underline">privacy@homekeep.app</a>.
+					Conformément au RGPD, vous disposez d'un droit d'accès, de rectification et de suppression
+					de vos données. Pour exercer ces droits, contactez-nous à
+					<a href="mailto:privacy@homekeep.app" class="text-blue-600 hover:underline"
+						>privacy@homekeep.app</a
+					>.
 				</p>
 			</section>
 
@@ -84,10 +88,10 @@
 			<section>
 				<h2 class="text-lg font-semibold text-slate-800 mb-3">6. Limitation de responsabilité</h2>
 				<p>
-					HomeKeep fournit des informations de maintenance à titre indicatif. Ces informations ne
-					se substituent pas aux recommandations de professionnels qualifiés. HomeKeep ne saurait
-					être tenu responsable des conséquences d'une intervention réalisée sur la base des
-					informations fournies.
+					HomeKeep fournit des informations de maintenance à titre indicatif. Ces informations ne se
+					substituent pas aux recommandations de professionnels qualifiés. HomeKeep ne saurait être
+					tenu responsable des conséquences d'une intervention réalisée sur la base des informations
+					fournies.
 				</p>
 			</section>
 
@@ -95,9 +99,8 @@
 				<h2 class="text-lg font-semibold text-slate-800 mb-3">7. Modifications</h2>
 				<p>
 					HomeKeep se réserve le droit de modifier les présentes conditions à tout moment. Les
-					utilisateurs seront notifiés par email en cas de modification substantielle. La
-					poursuite de l'utilisation du service après notification vaut acceptation des nouvelles
-					conditions.
+					utilisateurs seront notifiés par email en cas de modification substantielle. La poursuite
+					de l'utilisation du service après notification vaut acceptation des nouvelles conditions.
 				</p>
 			</section>
 

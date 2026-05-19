@@ -7,8 +7,15 @@
 	let loading = $state(false);
 
 	const CATEGORIES = [
-		'Chauffage', 'Plomberie', 'Électricité', 'Ventilation',
-		'Toiture', 'Extérieur', 'Sécurité', 'Cuisine', 'Autre'
+		'Chauffage',
+		'Plomberie',
+		'Électricité',
+		'Ventilation',
+		'Toiture',
+		'Extérieur',
+		'Sécurité',
+		'Cuisine',
+		'Autre'
 	];
 </script>
 
@@ -23,13 +30,18 @@
 
 	<div class="bg-white rounded-2xl border border-slate-100 p-6">
 		<h1 class="text-xl font-semibold text-slate-900 mb-1">Nouveau type d'équipement</h1>
-		<p class="text-sm text-slate-500 mb-6">Définissez un type d'équipement disponible pour tous les utilisateurs.</p>
+		<p class="text-sm text-slate-500 mb-6">
+			Définissez un type d'équipement disponible pour tous les utilisateurs.
+		</p>
 
 		<form
 			method="POST"
 			use:enhance={() => {
 				loading = true;
-				return async ({ update }) => { await update(); loading = false; };
+				return async ({ update }) => {
+					await update();
+					loading = false;
+				};
 			}}
 			class="space-y-4"
 		>

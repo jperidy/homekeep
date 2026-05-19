@@ -98,9 +98,10 @@ describe('equipment-types/edit — delete action', () => {
 
 	it('deletes the equipment type and redirects', async () => {
 		mocks.delete.mockResolvedValueOnce({ id: 'et-1' });
-		await expect(
-			actions.delete(makeEvent({}, 'et-1'))
-		).rejects.toMatchObject({ status: 302, location: '/app/admin/equipment-types' });
+		await expect(actions.delete(makeEvent({}, 'et-1'))).rejects.toMatchObject({
+			status: 302,
+			location: '/app/admin/equipment-types'
+		});
 		expect(mocks.delete).toHaveBeenCalledWith({ where: { id: 'et-1' } });
 	});
 
@@ -135,10 +136,17 @@ describe('equipment-types/edit — addRule action', () => {
 	it('creates the rule and redirects back to the edit page', async () => {
 		mocks.ruleCreate.mockResolvedValueOnce({ id: 'rule-1' });
 		await expect(
-			actions.addRule(makeEvent({ label: 'Annual check', intervalWeeks: '52', description: 'Yearly' }, 'et-1'))
+			actions.addRule(
+				makeEvent({ label: 'Annual check', intervalWeeks: '52', description: 'Yearly' }, 'et-1')
+			)
 		).rejects.toMatchObject({ status: 302, location: '/app/admin/equipment-types/et-1/edit' });
 		expect(mocks.ruleCreate).toHaveBeenCalledWith({
-			data: { equipmentTypeId: 'et-1', label: 'Annual check', intervalWeeks: 52, description: 'Yearly' }
+			data: {
+				equipmentTypeId: 'et-1',
+				label: 'Annual check',
+				intervalWeeks: 52,
+				description: 'Yearly'
+			}
 		});
 	});
 
@@ -172,9 +180,9 @@ describe('equipment-types/edit — deleteRule action', () => {
 
 	it('deletes the rule and redirects back to the edit page', async () => {
 		mocks.ruleDeleteMany.mockResolvedValueOnce({ count: 1 });
-		await expect(
-			actions.deleteRule(makeEvent({ ruleId: 'rule-1' }, 'et-1'))
-		).rejects.toMatchObject({ status: 302, location: '/app/admin/equipment-types/et-1/edit' });
+		await expect(actions.deleteRule(makeEvent({ ruleId: 'rule-1' }, 'et-1'))).rejects.toMatchObject(
+			{ status: 302, location: '/app/admin/equipment-types/et-1/edit' }
+		);
 		expect(mocks.ruleDeleteMany).toHaveBeenCalledWith({
 			where: { id: 'rule-1', equipmentTypeId: 'et-1' }
 		});

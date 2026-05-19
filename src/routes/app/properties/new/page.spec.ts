@@ -57,9 +57,9 @@ describe('properties/new — action', () => {
 
 	it('trims whitespace from name', async () => {
 		mocks.propertyCreate.mockResolvedValueOnce({ id: 'prop-2' });
-		await expect(
-			actions.default(makeEvent({ name: '  My house  ' }))
-		).rejects.toMatchObject({ status: 302 });
+		await expect(actions.default(makeEvent({ name: '  My house  ' }))).rejects.toMatchObject({
+			status: 302
+		});
 		expect(mocks.propertyCreate).toHaveBeenCalledWith(
 			expect.objectContaining({ data: expect.objectContaining({ name: 'My house' }) })
 		);
@@ -67,9 +67,9 @@ describe('properties/new — action', () => {
 
 	it('stores null when address is blank', async () => {
 		mocks.propertyCreate.mockResolvedValueOnce({ id: 'prop-3' });
-		await expect(
-			actions.default(makeEvent({ name: 'Studio', address: '' }))
-		).rejects.toMatchObject({ status: 302 });
+		await expect(actions.default(makeEvent({ name: 'Studio', address: '' }))).rejects.toMatchObject(
+			{ status: 302 }
+		);
 		expect(mocks.propertyCreate).toHaveBeenCalledWith(
 			expect.objectContaining({ data: expect.objectContaining({ address: null }) })
 		);
@@ -77,9 +77,9 @@ describe('properties/new — action', () => {
 
 	it('stores null when address is absent', async () => {
 		mocks.propertyCreate.mockResolvedValueOnce({ id: 'prop-4' });
-		await expect(
-			actions.default(makeEvent({ name: 'Chalet' }))
-		).rejects.toMatchObject({ status: 302 });
+		await expect(actions.default(makeEvent({ name: 'Chalet' }))).rejects.toMatchObject({
+			status: 302
+		});
 		expect(mocks.propertyCreate).toHaveBeenCalledWith(
 			expect.objectContaining({ data: expect.objectContaining({ address: null }) })
 		);

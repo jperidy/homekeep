@@ -40,7 +40,10 @@
 				method="POST"
 				use:enhance={() => {
 					loading = true;
-					return async ({ update }) => { await update(); loading = false; };
+					return async ({ update }) => {
+						await update();
+						loading = false;
+					};
 				}}
 				class="space-y-4"
 			>
@@ -58,10 +61,9 @@
 						{#each Object.entries(byCategory) as [category, types]}
 							<optgroup label={category}>
 								{#each types as type}
-									<option
-										value={type.id}
-										selected={form?.equipmentTypeId === type.id}
-									>{type.name}</option>
+									<option value={type.id} selected={form?.equipmentTypeId === type.id}
+										>{type.name}</option
+									>
 								{/each}
 							</optgroup>
 						{/each}
@@ -128,7 +130,7 @@
 					disabled={loading}
 					class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 rounded-xl text-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
 				>
-					{loading ? 'Enregistrement…' : 'Ajouter l\'équipement'}
+					{loading ? 'Enregistrement…' : "Ajouter l'équipement"}
 				</button>
 			</form>
 		{/if}

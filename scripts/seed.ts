@@ -32,38 +32,138 @@ function hashPassword(password: string): Promise<string> {
 
 const EQUIPMENT_TYPES = [
 	// Chauffage
-	{ name: 'Chaudière à gaz',           category: 'Chauffage',    description: 'Chaudière à condensation ou classique, alimentation gaz naturel ou GPL.' },
-	{ name: 'Chaudière fioul',            category: 'Chauffage',    description: 'Chaudière à condensation alimentée au fioul domestique.' },
-	{ name: 'Pompe à chaleur air/eau',    category: 'Chauffage',    description: 'PAC aérothermique connectée au circuit de chauffage central.' },
-	{ name: 'Pompe à chaleur air/air',    category: 'Chauffage',    description: "PAC réversible pour chauffage et climatisation d'appoint." },
-	{ name: 'Radiateur électrique',       category: 'Chauffage',    description: 'Radiateur à inertie ou à panneau rayonnant.' },
-	{ name: 'Poêle à bois / granulés',   category: 'Chauffage',    description: 'Appareil de chauffage à combustion : bûches ou pellets.' },
-	{ name: 'Insert cheminée',            category: 'Chauffage',    description: 'Insert fermé ou foyer fermé intégré dans une cheminée existante.' },
+	{
+		name: 'Chaudière à gaz',
+		category: 'Chauffage',
+		description: 'Chaudière à condensation ou classique, alimentation gaz naturel ou GPL.'
+	},
+	{
+		name: 'Chaudière fioul',
+		category: 'Chauffage',
+		description: 'Chaudière à condensation alimentée au fioul domestique.'
+	},
+	{
+		name: 'Pompe à chaleur air/eau',
+		category: 'Chauffage',
+		description: 'PAC aérothermique connectée au circuit de chauffage central.'
+	},
+	{
+		name: 'Pompe à chaleur air/air',
+		category: 'Chauffage',
+		description: "PAC réversible pour chauffage et climatisation d'appoint."
+	},
+	{
+		name: 'Radiateur électrique',
+		category: 'Chauffage',
+		description: 'Radiateur à inertie ou à panneau rayonnant.'
+	},
+	{
+		name: 'Poêle à bois / granulés',
+		category: 'Chauffage',
+		description: 'Appareil de chauffage à combustion : bûches ou pellets.'
+	},
+	{
+		name: 'Insert cheminée',
+		category: 'Chauffage',
+		description: 'Insert fermé ou foyer fermé intégré dans une cheminée existante.'
+	},
 	// Eau chaude sanitaire
-	{ name: 'Chauffe-eau électrique',      category: 'Plomberie',    description: "Ballon d'eau chaude électrique (cumulus)." },
-	{ name: 'Chauffe-eau thermodynamique', category: 'Plomberie',   description: "Ballon d'eau chaude couplé à une pompe à chaleur." },
-	{ name: 'Ballon solaire',              category: 'Plomberie',   description: 'Chauffe-eau solaire individuel (CESI).' },
-	{ name: "Adoucisseur d'eau",           category: 'Plomberie',   description: "Système de traitement de l'eau pour réduire le calcaire." },
+	{
+		name: 'Chauffe-eau électrique',
+		category: 'Plomberie',
+		description: "Ballon d'eau chaude électrique (cumulus)."
+	},
+	{
+		name: 'Chauffe-eau thermodynamique',
+		category: 'Plomberie',
+		description: "Ballon d'eau chaude couplé à une pompe à chaleur."
+	},
+	{
+		name: 'Ballon solaire',
+		category: 'Plomberie',
+		description: 'Chauffe-eau solaire individuel (CESI).'
+	},
+	{
+		name: "Adoucisseur d'eau",
+		category: 'Plomberie',
+		description: "Système de traitement de l'eau pour réduire le calcaire."
+	},
 	// Ventilation
-	{ name: 'VMC simple flux',            category: 'Ventilation',  description: 'Ventilation mécanique contrôlée à extraction uniquement.' },
-	{ name: 'VMC double flux',            category: 'Ventilation',  description: "VMC avec récupérateur de chaleur sur l'air extrait." },
+	{
+		name: 'VMC simple flux',
+		category: 'Ventilation',
+		description: 'Ventilation mécanique contrôlée à extraction uniquement.'
+	},
+	{
+		name: 'VMC double flux',
+		category: 'Ventilation',
+		description: "VMC avec récupérateur de chaleur sur l'air extrait."
+	},
 	// Électricité
-	{ name: 'Tableau électrique',         category: 'Électricité',  description: 'Tableau de distribution avec disjoncteurs et différentiels.' },
-	{ name: 'Installation photovoltaïque', category: 'Électricité', description: "Panneaux solaires pour production d'électricité." },
-	{ name: 'Borne de recharge VE',       category: 'Électricité',  description: 'Point de charge pour véhicule électrique.' },
+	{
+		name: 'Tableau électrique',
+		category: 'Électricité',
+		description: 'Tableau de distribution avec disjoncteurs et différentiels.'
+	},
+	{
+		name: 'Installation photovoltaïque',
+		category: 'Électricité',
+		description: "Panneaux solaires pour production d'électricité."
+	},
+	{
+		name: 'Borne de recharge VE',
+		category: 'Électricité',
+		description: 'Point de charge pour véhicule électrique.'
+	},
 	// Toiture
-	{ name: 'Toiture tuiles',             category: 'Toiture',      description: 'Couverture en tuiles terre cuite ou béton.' },
-	{ name: 'Toiture ardoises',           category: 'Toiture',      description: 'Couverture en ardoises naturelles ou fibrociment.' },
-	{ name: 'Toiture zinc / bac acier',   category: 'Toiture',      description: 'Couverture métallique : zinc, acier laqué ou aluminium.' },
-	{ name: 'Gouttières',                 category: 'Toiture',      description: 'Système de collecte et évacuation des eaux pluviales.' },
+	{
+		name: 'Toiture tuiles',
+		category: 'Toiture',
+		description: 'Couverture en tuiles terre cuite ou béton.'
+	},
+	{
+		name: 'Toiture ardoises',
+		category: 'Toiture',
+		description: 'Couverture en ardoises naturelles ou fibrociment.'
+	},
+	{
+		name: 'Toiture zinc / bac acier',
+		category: 'Toiture',
+		description: 'Couverture métallique : zinc, acier laqué ou aluminium.'
+	},
+	{
+		name: 'Gouttières',
+		category: 'Toiture',
+		description: 'Système de collecte et évacuation des eaux pluviales.'
+	},
 	// Extérieur
-	{ name: 'Piscine',                    category: 'Extérieur',    description: 'Piscine enterrée ou hors-sol avec système de filtration.' },
-	{ name: 'Portail motorisé',           category: 'Extérieur',    description: 'Portail coulissant ou battant avec motorisation.' },
-	{ name: "Système d'arrosage",         category: 'Extérieur',   description: 'Arrosage automatique par asperseurs ou goutte-à-goutte.' },
+	{
+		name: 'Piscine',
+		category: 'Extérieur',
+		description: 'Piscine enterrée ou hors-sol avec système de filtration.'
+	},
+	{
+		name: 'Portail motorisé',
+		category: 'Extérieur',
+		description: 'Portail coulissant ou battant avec motorisation.'
+	},
+	{
+		name: "Système d'arrosage",
+		category: 'Extérieur',
+		description: 'Arrosage automatique par asperseurs ou goutte-à-goutte.'
+	},
 	// Sécurité
-	{ name: 'Alarme intrusion',           category: 'Sécurité',     description: "Système d'alarme avec détecteurs et centrale." },
-	{ name: 'Détecteurs de fumée',        category: 'Sécurité',     description: 'DAAF obligatoires : détecteurs avertisseurs autonomes.' },
-	{ name: 'Détecteur CO',              category: 'Sécurité',     description: 'Détecteur de monoxyde de carbone.' },
+	{
+		name: 'Alarme intrusion',
+		category: 'Sécurité',
+		description: "Système d'alarme avec détecteurs et centrale."
+	},
+	{
+		name: 'Détecteurs de fumée',
+		category: 'Sécurité',
+		description: 'DAAF obligatoires : détecteurs avertisseurs autonomes.'
+	},
+	{ name: 'Détecteur CO', category: 'Sécurité', description: 'Détecteur de monoxyde de carbone.' }
 ] satisfies { name: string; category: string; description: string }[];
 
 // ── Seed ──────────────────────────────────────────────────────────────────────
@@ -118,46 +218,91 @@ async function seedEquipmentTypes() {
 		else updated++;
 	}
 
-	console.log(`  ✓ ${EQUIPMENT_TYPES.length} types d'équipement (${created} créés, ${updated} mis à jour)`);
+	console.log(
+		`  ✓ ${EQUIPMENT_TYPES.length} types d'équipement (${created} créés, ${updated} mis à jour)`
+	);
 }
 
 // ── Règles de maintenance ─────────────────────────────────────────────────────
 
-const MAINTENANCE_RULES: { typeName: string; label: string; intervalWeeks: number; description?: string }[] = [
+const MAINTENANCE_RULES: {
+	typeName: string;
+	label: string;
+	intervalWeeks: number;
+	description?: string;
+}[] = [
 	// Chaudière à gaz
-	{ typeName: 'Chaudière à gaz',             label: 'Révision annuelle',              intervalWeeks: 52,  description: 'Entretien obligatoire par un professionnel certifié.' },
-	{ typeName: 'Chaudière à gaz',             label: 'Purge des radiateurs',           intervalWeeks: 52 },
+	{
+		typeName: 'Chaudière à gaz',
+		label: 'Révision annuelle',
+		intervalWeeks: 52,
+		description: 'Entretien obligatoire par un professionnel certifié.'
+	},
+	{ typeName: 'Chaudière à gaz', label: 'Purge des radiateurs', intervalWeeks: 52 },
 	// Chaudière fioul
-	{ typeName: 'Chaudière fioul',             label: 'Révision annuelle',              intervalWeeks: 52,  description: 'Entretien obligatoire par un professionnel certifié.' },
+	{
+		typeName: 'Chaudière fioul',
+		label: 'Révision annuelle',
+		intervalWeeks: 52,
+		description: 'Entretien obligatoire par un professionnel certifié.'
+	},
 	// Pompe à chaleur air/eau
-	{ typeName: 'Pompe à chaleur air/eau',     label: 'Entretien annuel',               intervalWeeks: 52 },
-	{ typeName: 'Pompe à chaleur air/eau',     label: 'Nettoyage des filtres',          intervalWeeks: 12 },
+	{ typeName: 'Pompe à chaleur air/eau', label: 'Entretien annuel', intervalWeeks: 52 },
+	{ typeName: 'Pompe à chaleur air/eau', label: 'Nettoyage des filtres', intervalWeeks: 12 },
 	// Pompe à chaleur air/air
-	{ typeName: 'Pompe à chaleur air/air',     label: 'Nettoyage des filtres',          intervalWeeks: 4 },
-	{ typeName: 'Pompe à chaleur air/air',     label: 'Entretien annuel',               intervalWeeks: 52 },
+	{ typeName: 'Pompe à chaleur air/air', label: 'Nettoyage des filtres', intervalWeeks: 4 },
+	{ typeName: 'Pompe à chaleur air/air', label: 'Entretien annuel', intervalWeeks: 52 },
 	// Chauffe-eau électrique
-	{ typeName: 'Chauffe-eau électrique',      label: 'Détartrage',                     intervalWeeks: 52 },
-	{ typeName: 'Chauffe-eau électrique',      label: "Changement de l'anode magnésium", intervalWeeks: 104, description: 'À remplacer tous les 2 ans environ.' },
+	{ typeName: 'Chauffe-eau électrique', label: 'Détartrage', intervalWeeks: 52 },
+	{
+		typeName: 'Chauffe-eau électrique',
+		label: "Changement de l'anode magnésium",
+		intervalWeeks: 104,
+		description: 'À remplacer tous les 2 ans environ.'
+	},
 	// Chauffe-eau thermodynamique
-	{ typeName: 'Chauffe-eau thermodynamique', label: 'Entretien annuel',               intervalWeeks: 52 },
-	{ typeName: 'Chauffe-eau thermodynamique', label: "Nettoyage du filtre à air",      intervalWeeks: 12 },
+	{ typeName: 'Chauffe-eau thermodynamique', label: 'Entretien annuel', intervalWeeks: 52 },
+	{
+		typeName: 'Chauffe-eau thermodynamique',
+		label: 'Nettoyage du filtre à air',
+		intervalWeeks: 12
+	},
 	// Adoucisseur d'eau
-	{ typeName: "Adoucisseur d'eau",           label: 'Réapprovisionnement en sel',     intervalWeeks: 4 },
-	{ typeName: "Adoucisseur d'eau",           label: 'Désinfection du bac à sel',      intervalWeeks: 26 },
+	{ typeName: "Adoucisseur d'eau", label: 'Réapprovisionnement en sel', intervalWeeks: 4 },
+	{ typeName: "Adoucisseur d'eau", label: 'Désinfection du bac à sel', intervalWeeks: 26 },
 	// VMC simple flux
-	{ typeName: 'VMC simple flux',             label: 'Nettoyage des bouches',          intervalWeeks: 26 },
-	{ typeName: 'VMC simple flux',             label: 'Remplacement des filtres',       intervalWeeks: 52 },
+	{ typeName: 'VMC simple flux', label: 'Nettoyage des bouches', intervalWeeks: 26 },
+	{ typeName: 'VMC simple flux', label: 'Remplacement des filtres', intervalWeeks: 52 },
 	// VMC double flux
-	{ typeName: 'VMC double flux',             label: 'Remplacement filtres G4',        intervalWeeks: 13, description: 'Filtres côté reprise.' },
-	{ typeName: 'VMC double flux',             label: 'Remplacement filtres F7',        intervalWeeks: 26, description: 'Filtres côté soufflage.' },
-	{ typeName: 'VMC double flux',             label: 'Révision annuelle',              intervalWeeks: 52 },
+	{
+		typeName: 'VMC double flux',
+		label: 'Remplacement filtres G4',
+		intervalWeeks: 13,
+		description: 'Filtres côté reprise.'
+	},
+	{
+		typeName: 'VMC double flux',
+		label: 'Remplacement filtres F7',
+		intervalWeeks: 26,
+		description: 'Filtres côté soufflage.'
+	},
+	{ typeName: 'VMC double flux', label: 'Révision annuelle', intervalWeeks: 52 },
 	// Tableau électrique
-	{ typeName: 'Tableau électrique',          label: 'Test des disjoncteurs différentiels', intervalWeeks: 26 },
+	{
+		typeName: 'Tableau électrique',
+		label: 'Test des disjoncteurs différentiels',
+		intervalWeeks: 26
+	},
 	// Alarme intrusion
-	{ typeName: 'Alarme intrusion',            label: 'Test du système',                intervalWeeks: 13 },
-	{ typeName: 'Alarme intrusion',            label: 'Remplacement des batteries',     intervalWeeks: 52 },
+	{ typeName: 'Alarme intrusion', label: 'Test du système', intervalWeeks: 13 },
+	{ typeName: 'Alarme intrusion', label: 'Remplacement des batteries', intervalWeeks: 52 },
 	// Détecteurs de fumée
-	{ typeName: 'Détecteurs de fumée',         label: 'Test du déclenchement',          intervalWeeks: 13, description: 'Appuyer sur le bouton test de chaque détecteur.' },
+	{
+		typeName: 'Détecteurs de fumée',
+		label: 'Test du déclenchement',
+		intervalWeeks: 13,
+		description: 'Appuyer sur le bouton test de chaque détecteur.'
+	}
 ];
 
 async function seedMaintenanceRules() {
@@ -183,7 +328,9 @@ async function seedMaintenanceRules() {
 		else updated++;
 	}
 
-	console.log(`  ✓ ${MAINTENANCE_RULES.length} règles de maintenance (${created} créées, ${updated} mises à jour)`);
+	console.log(
+		`  ✓ ${MAINTENANCE_RULES.length} règles de maintenance (${created} créées, ${updated} mises à jour)`
+	);
 }
 
 // ── Propriété démo ────────────────────────────────────────────────────────────
@@ -200,53 +347,51 @@ type EquipmentConfig = {
 
 const DEMO_EQUIPMENT: EquipmentConfig[] = [
 	{
-		name: "Chaudière à gaz principale",
-		typeName: "Chaudière à gaz",
-		brand: "Viessmann",
-		model: "Vitodens 100-W",
-		installedAt: new Date("2023-01-15"),
+		name: 'Chaudière à gaz principale',
+		typeName: 'Chaudière à gaz',
+		brand: 'Viessmann',
+		model: 'Vitodens 100-W',
+		installedAt: new Date('2023-01-15'),
 		tasks: [
-			{ ruleLabel: "Révision annuelle",    dueDate: new Date("2025-01-15") },
-			{ ruleLabel: "Purge des radiateurs", dueDate: new Date("2025-01-15") }
+			{ ruleLabel: 'Révision annuelle', dueDate: new Date('2025-01-15') },
+			{ ruleLabel: 'Purge des radiateurs', dueDate: new Date('2025-01-15') }
 		]
 	},
 	{
-		name: "VMC double flux",
-		typeName: "VMC double flux",
-		installedAt: new Date("2024-06-01"),
+		name: 'VMC double flux',
+		typeName: 'VMC double flux',
+		installedAt: new Date('2024-06-01'),
 		tasks: [
-			{ ruleLabel: "Remplacement filtres G4", dueDate: new Date("2026-04-01") },
-			{ ruleLabel: "Remplacement filtres F7", dueDate: new Date("2026-06-16") },
-			{ ruleLabel: "Révision annuelle",       dueDate: new Date("2026-12-01") }
+			{ ruleLabel: 'Remplacement filtres G4', dueDate: new Date('2026-04-01') },
+			{ ruleLabel: 'Remplacement filtres F7', dueDate: new Date('2026-06-16') },
+			{ ruleLabel: 'Révision annuelle', dueDate: new Date('2026-12-01') }
 		]
 	},
 	{
-		name: "Détecteurs de fumée",
-		typeName: "Détecteurs de fumée",
-		installedAt: new Date("2026-03-01"),
-		tasks: [
-			{ ruleLabel: "Test du déclenchement", dueDate: new Date("2026-06-01") }
-		]
+		name: 'Détecteurs de fumée',
+		typeName: 'Détecteurs de fumée',
+		installedAt: new Date('2026-03-01'),
+		tasks: [{ ruleLabel: 'Test du déclenchement', dueDate: new Date('2026-06-01') }]
 	}
 ];
 
 async function seedDemoProperty() {
-	const admin = await prisma.user.findFirst({ where: { email: "admin@homekeep.dev" } });
+	const admin = await prisma.user.findFirst({ where: { email: 'admin@homekeep.dev' } });
 	if (!admin) {
-		console.log("  ⚠ Admin non trouvé, skip propriété démo");
+		console.log('  ⚠ Admin non trouvé, skip propriété démo');
 		return;
 	}
 
 	let property = await prisma.property.findFirst({
-		where: { userId: admin.id, name: "Mon appartement de test" }
+		where: { userId: admin.id, name: 'Mon appartement de test' }
 	});
 	if (!property) {
 		property = await prisma.property.create({
 			data: {
 				id: randomUUID(),
 				userId: admin.id,
-				name: "Mon appartement de test",
-				address: "12 rue de la Paix, 75001 Paris"
+				name: 'Mon appartement de test',
+				address: '12 rue de la Paix, 75001 Paris'
 			}
 		});
 	}
@@ -296,9 +441,15 @@ async function seedDemoProperty() {
 		}
 	}
 
-	const overdueCount = DEMO_EQUIPMENT.flatMap(d => d.tasks).filter(t => t.dueDate < new Date()).length;
-	const upcomingCount = DEMO_EQUIPMENT.flatMap(d => d.tasks).filter(t => t.dueDate >= new Date()).length;
-	console.log(`  ✓ Propriété démo "${property.name}" (${overdueCount} tâches en retard, ${upcomingCount} à venir)`);
+	const overdueCount = DEMO_EQUIPMENT.flatMap((d) => d.tasks).filter(
+		(t) => t.dueDate < new Date()
+	).length;
+	const upcomingCount = DEMO_EQUIPMENT.flatMap((d) => d.tasks).filter(
+		(t) => t.dueDate >= new Date()
+	).length;
+	console.log(
+		`  ✓ Propriété démo "${property.name}" (${overdueCount} tâches en retard, ${upcomingCount} à venir)`
+	);
 }
 
 // ── Main ──────────────────────────────────────────────────────────────────────
