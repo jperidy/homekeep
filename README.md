@@ -52,6 +52,22 @@ Docker Compose démarre trois services :
 
 Les migrations de base de données sont appliquées automatiquement au démarrage.
 
+### 4. Seed (optionnel, recommandé pour les tests manuels)
+
+```sh
+pnpm seed
+```
+
+Crée un compte admin, provisionne le catalogue d'équipements et génère une propriété de démonstration avec des tâches de maintenance :
+
+| Compte | Email | Mot de passe |
+|--------|-------|--------------|
+| Admin  | `admin@homekeep.dev` | `admin1234` |
+
+La propriété démo **Mon appartement de test** est créée pour le compte admin, avec 3 équipements et un mix de tâches en retard et à venir pour tester le planning.
+
+Le seed est **idempotent** : il peut être relancé sans risque de doublons.
+
 ---
 
 ## Variables d'environnement
@@ -91,9 +107,16 @@ Ces commandes s'exécutent dans le container Docker (les containers doivent êtr
 pnpm db:migrate      # Créer et appliquer une nouvelle migration (interactif)
 pnpm db:reset        # Réinitialiser la base ⚠ supprime toutes les données
 pnpm db:studio       # Ouvrir Prisma Studio sur http://localhost:5555
+pnpm seed            # Insérer les données de développement (admin + catalogue + démo)
 ```
 
 > `db:studio` se lance en local et se connecte à la base via le port 5432 exposé par Docker.
+
+### Admin
+
+```sh
+pnpm make-admin <email>   # Promouvoir un compte existant en ADMIN
+```
 
 ### Ajouter une dépendance
 
@@ -120,19 +143,35 @@ pnpm check:watch     # Vérification en mode watch
 ## Structure du projet
 
 ```
+scripts/
+├── seed.ts                     # Seed dev : admin + catalogue + propriété démo
+└── make-admin.ts               # Promote un utilisateur en ADMIN
 src/
 ├── lib/
+│   ├── components/
+│   │   └── Logo.svelte         # Logo HomeKeep (SVG)
 │   ├── auth-client.ts          # Client better-auth (browser)
 │   └── server/
 │       ├── auth.ts             # Configuration better-auth (serveur)
 │       ├── prisma.ts           # Instance Prisma (driver PostgreSQL natif)
-│       └── mailer.ts           # Envoi d'emails via nodemailer
+│       ├── mailer.ts           # Envoi d'emails via nodemailer
+│       └── maintenance.ts      # Logique planning : génération de tâches, calcul d'échéances
 ├── routes/
 │   ├── +page.svelte            # Landing page publique
 │   ├── app/                    # Zone authentifiée (/app/*)
-│   │   ├── +layout.server.ts   # Guard : redirige vers /login si non connecté
+│   │   ├── +layout.server.ts   # Guard auth → /login si non connecté
 │   │   ├── +layout.svelte      # Shell de l'app (nav + déconnexion)
-│   │   └── +page.svelte        # Dashboard
+│   │   ├── +page.svelte        # Dashboard (propriétés, stats)
+│   │   ├── admin/              # Zone admin (/app/admin/*)
+│   │   │   ├── +layout.server.ts          # Guard rôle → /app si non ADMIN
+│   │   │   └── equipment-types/           # CRUD catalogue équipements
+│   │   │       ├── +page.svelte           # Liste par catégorie
+│   │   │       ├── new/                   # Créer un type
+│   │   │       └── [id]/edit/             # Modifier / supprimer un type
+│   │   └── properties/
+│   │       ├── new/                       # Ajouter une propriété
+│   │       └── [id]/                      # Détail d'une propriété + planning de maintenance
+│   │           └── equipment/new/         # Ajouter un équipement (génère le planning auto)
 │   ├── (auth)/                 # Pages auth (layout carte centrée)
 │   │   ├── login/
 │   │   ├── register/
@@ -162,6 +201,19 @@ En développement, tous les emails sont capturés par **Mailpit** : http://local
 
 ---
 
+## Sécurité des routes
+
+La sécurité est factoriée via le système de **layouts SvelteKit** : chaque layout protège automatiquement toutes les routes enfants.
+
+| Layout | Garde | Comportement si rejeté |
+|--------|-------|------------------------|
+| `/app/+layout.server.ts` | Session valide requise | Redirect → `/login` |
+| `/app/admin/+layout.server.ts` | Rôle `ADMIN` requis | Redirect → `/app` |
+
+Les pages individuelles gèrent uniquement les vérifications de **propriété des ressources** (ex : une propriété appartient bien à l'utilisateur courant), ce qui est distinct de l'authentification/autorisation.
+
+---
+
 ## Tests
 
 Les tests sont co-localisés avec les fichiers sources (convention `.spec.ts`, sans préfixe `+`).
@@ -173,5 +225,14 @@ pnpm test
 | Fichier | Ce qui est testé |
 |---------|-----------------|
 | `src/lib/server/mailer.spec.ts` | Envoi d'emails, propagation d'erreurs SMTP |
+| `src/lib/server/maintenance.spec.ts` | `getNextDueDate` (logique d'échéance), `generatePlan` (création plan + tâches) |
 | `src/routes/(auth)/login/page.spec.ts` | Formulaire, mode magic link, messages d'erreur |
 | `src/routes/(auth)/register/page.spec.ts` | Inscription, état succès, validation, liens |
+| `src/routes/app/layout.server.spec.ts` | **Guard auth** : session requise, flag `isAdmin` |
+| `src/routes/app/page.spec.ts` | Dashboard : comptage équipements, tâches en attente |
+| `src/routes/app/admin/layout.server.spec.ts` | **Guard rôle** : ADMIN requis, rejet USER/null |
+| `src/routes/app/properties/new/page.spec.ts` | Action création propriété (validation, redirect) |
+| `src/routes/app/properties/[id]/page.spec.ts` | Load propriété + tâches, action `completeTask` |
+| `src/routes/app/admin/equipment-types/new/page.spec.ts` | Action création type (validation, unicité, UI) |
+| `src/routes/app/admin/equipment-types/[id]/edit/page.spec.ts` | Actions update, delete, addRule, deleteRule |
+| `src/routes/app/properties/[id]/equipment/new/page.spec.ts` | Action ajout équipement + génération du plan (validation, redirect, UI) |

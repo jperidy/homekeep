@@ -1,16 +1,16 @@
 -- CreateEnum
-CREATE TYPE "UserRole" AS ENUM ('USER', 'ADMIN');
+CREATE TYPE "user_role" AS ENUM ('USER', 'ADMIN');
 
 -- CreateTable
 CREATE TABLE "user" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "email" TEXT NOT NULL,
-    "emailVerified" BOOLEAN NOT NULL DEFAULT false,
+    "email_verified" BOOLEAN NOT NULL DEFAULT false,
     "image" TEXT,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
-    "role" "UserRole" NOT NULL DEFAULT 'USER',
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3) NOT NULL,
+    "role" "user_role" NOT NULL DEFAULT 'USER',
 
     CONSTRAINT "user_pkey" PRIMARY KEY ("id")
 );
@@ -18,13 +18,13 @@ CREATE TABLE "user" (
 -- CreateTable
 CREATE TABLE "session" (
     "id" TEXT NOT NULL,
-    "expiresAt" TIMESTAMP(3) NOT NULL,
+    "expires_at" TIMESTAMP(3) NOT NULL,
     "token" TEXT NOT NULL,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
-    "ipAddress" TEXT,
-    "userAgent" TEXT,
-    "userId" TEXT NOT NULL,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3) NOT NULL,
+    "ip_address" TEXT,
+    "user_agent" TEXT,
+    "user_id" TEXT NOT NULL,
 
     CONSTRAINT "session_pkey" PRIMARY KEY ("id")
 );
@@ -32,18 +32,18 @@ CREATE TABLE "session" (
 -- CreateTable
 CREATE TABLE "account" (
     "id" TEXT NOT NULL,
-    "accountId" TEXT NOT NULL,
-    "providerId" TEXT NOT NULL,
-    "userId" TEXT NOT NULL,
-    "accessToken" TEXT,
-    "refreshToken" TEXT,
-    "idToken" TEXT,
-    "accessTokenExpiresAt" TIMESTAMP(3),
-    "refreshTokenExpiresAt" TIMESTAMP(3),
+    "account_id" TEXT NOT NULL,
+    "provider_id" TEXT NOT NULL,
+    "user_id" TEXT NOT NULL,
+    "access_token" TEXT,
+    "refresh_token" TEXT,
+    "id_token" TEXT,
+    "access_token_expires_at" TIMESTAMP(3),
+    "refresh_token_expires_at" TIMESTAMP(3),
     "scope" TEXT,
     "password" TEXT,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "account_pkey" PRIMARY KEY ("id")
 );
@@ -53,132 +53,132 @@ CREATE TABLE "verification" (
     "id" TEXT NOT NULL,
     "identifier" TEXT NOT NULL,
     "value" TEXT NOT NULL,
-    "expiresAt" TIMESTAMP(3) NOT NULL,
-    "createdAt" TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3),
+    "expires_at" TIMESTAMP(3) NOT NULL,
+    "created_at" TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3),
 
     CONSTRAINT "verification_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "EquipmentType" (
+CREATE TABLE "equipment_type" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "category" TEXT NOT NULL,
     "description" TEXT,
-    "imageUrl" TEXT,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "image_url" TEXT,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3) NOT NULL,
 
-    CONSTRAINT "EquipmentType_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "equipment_type_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "MaintenanceTemplate" (
+CREATE TABLE "maintenance_template" (
     "id" TEXT NOT NULL,
-    "equipmentTypeId" TEXT NOT NULL,
+    "equipment_type_id" TEXT NOT NULL,
     "title" TEXT NOT NULL,
     "description" TEXT,
-    "frequencyDays" INTEGER NOT NULL,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "frequency_days" INTEGER NOT NULL,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3) NOT NULL,
 
-    CONSTRAINT "MaintenanceTemplate_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "maintenance_template_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "Product" (
+CREATE TABLE "product" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "description" TEXT,
-    "imageUrl" TEXT,
-    "affiliateUrl" TEXT NOT NULL,
+    "image_url" TEXT,
+    "affiliate_url" TEXT NOT NULL,
     "retailer" TEXT NOT NULL,
     "price" DOUBLE PRECISION,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3) NOT NULL,
 
-    CONSTRAINT "Product_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "product_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "ProductOnTemplate" (
-    "templateId" TEXT NOT NULL,
-    "productId" TEXT NOT NULL,
+CREATE TABLE "product_on_template" (
+    "template_id" TEXT NOT NULL,
+    "product_id" TEXT NOT NULL,
 
-    CONSTRAINT "ProductOnTemplate_pkey" PRIMARY KEY ("templateId","productId")
+    CONSTRAINT "product_on_template_pkey" PRIMARY KEY ("template_id","product_id")
 );
 
 -- CreateTable
-CREATE TABLE "Property" (
+CREATE TABLE "property" (
     "id" TEXT NOT NULL,
-    "userId" TEXT NOT NULL,
+    "user_id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "address" TEXT,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3) NOT NULL,
 
-    CONSTRAINT "Property_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "property_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "Equipment" (
+CREATE TABLE "equipment" (
     "id" TEXT NOT NULL,
-    "propertyId" TEXT NOT NULL,
-    "equipmentTypeId" TEXT NOT NULL,
+    "property_id" TEXT NOT NULL,
+    "equipment_type_id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "brand" TEXT,
     "model" TEXT,
-    "installedAt" TIMESTAMP(3),
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "installed_at" TIMESTAMP(3),
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3) NOT NULL,
 
-    CONSTRAINT "Equipment_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "equipment_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "MaintenancePlan" (
+CREATE TABLE "maintenance_plan" (
     "id" TEXT NOT NULL,
-    "equipmentId" TEXT NOT NULL,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "equipment_id" TEXT NOT NULL,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3) NOT NULL,
 
-    CONSTRAINT "MaintenancePlan_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "maintenance_plan_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "MaintenanceTask" (
+CREATE TABLE "maintenance_task" (
     "id" TEXT NOT NULL,
-    "planId" TEXT NOT NULL,
-    "templateId" TEXT,
+    "plan_id" TEXT NOT NULL,
+    "template_id" TEXT,
     "title" TEXT NOT NULL,
-    "dueDate" TIMESTAMP(3) NOT NULL,
-    "completedAt" TIMESTAMP(3),
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "due_date" TIMESTAMP(3) NOT NULL,
+    "completed_at" TIMESTAMP(3),
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3) NOT NULL,
 
-    CONSTRAINT "MaintenanceTask_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "maintenance_task_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "ShoppingCart" (
+CREATE TABLE "shopping_cart" (
     "id" TEXT NOT NULL,
-    "userId" TEXT NOT NULL,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "user_id" TEXT NOT NULL,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3) NOT NULL,
 
-    CONSTRAINT "ShoppingCart_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "shopping_cart_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "CartItem" (
+CREATE TABLE "cart_item" (
     "id" TEXT NOT NULL,
-    "cartId" TEXT NOT NULL,
-    "productId" TEXT NOT NULL,
+    "cart_id" TEXT NOT NULL,
+    "product_id" TEXT NOT NULL,
     "quantity" INTEGER NOT NULL DEFAULT 1,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-    CONSTRAINT "CartItem_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "cart_item_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateIndex
@@ -188,46 +188,46 @@ CREATE UNIQUE INDEX "user_email_key" ON "user"("email");
 CREATE UNIQUE INDEX "session_token_key" ON "session"("token");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "EquipmentType_name_key" ON "EquipmentType"("name");
+CREATE UNIQUE INDEX "equipment_type_name_key" ON "equipment_type"("name");
 
 -- AddForeignKey
-ALTER TABLE "session" ADD CONSTRAINT "session_userId_fkey" FOREIGN KEY ("userId") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "session" ADD CONSTRAINT "session_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "account" ADD CONSTRAINT "account_userId_fkey" FOREIGN KEY ("userId") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "account" ADD CONSTRAINT "account_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "MaintenanceTemplate" ADD CONSTRAINT "MaintenanceTemplate_equipmentTypeId_fkey" FOREIGN KEY ("equipmentTypeId") REFERENCES "EquipmentType"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "maintenance_template" ADD CONSTRAINT "maintenance_template_equipment_type_id_fkey" FOREIGN KEY ("equipment_type_id") REFERENCES "equipment_type"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "ProductOnTemplate" ADD CONSTRAINT "ProductOnTemplate_templateId_fkey" FOREIGN KEY ("templateId") REFERENCES "MaintenanceTemplate"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "product_on_template" ADD CONSTRAINT "product_on_template_template_id_fkey" FOREIGN KEY ("template_id") REFERENCES "maintenance_template"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "ProductOnTemplate" ADD CONSTRAINT "ProductOnTemplate_productId_fkey" FOREIGN KEY ("productId") REFERENCES "Product"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "product_on_template" ADD CONSTRAINT "product_on_template_product_id_fkey" FOREIGN KEY ("product_id") REFERENCES "product"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Property" ADD CONSTRAINT "Property_userId_fkey" FOREIGN KEY ("userId") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "property" ADD CONSTRAINT "property_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Equipment" ADD CONSTRAINT "Equipment_propertyId_fkey" FOREIGN KEY ("propertyId") REFERENCES "Property"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "equipment" ADD CONSTRAINT "equipment_property_id_fkey" FOREIGN KEY ("property_id") REFERENCES "property"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Equipment" ADD CONSTRAINT "Equipment_equipmentTypeId_fkey" FOREIGN KEY ("equipmentTypeId") REFERENCES "EquipmentType"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "equipment" ADD CONSTRAINT "equipment_equipment_type_id_fkey" FOREIGN KEY ("equipment_type_id") REFERENCES "equipment_type"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "MaintenancePlan" ADD CONSTRAINT "MaintenancePlan_equipmentId_fkey" FOREIGN KEY ("equipmentId") REFERENCES "Equipment"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "maintenance_plan" ADD CONSTRAINT "maintenance_plan_equipment_id_fkey" FOREIGN KEY ("equipment_id") REFERENCES "equipment"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "MaintenanceTask" ADD CONSTRAINT "MaintenanceTask_planId_fkey" FOREIGN KEY ("planId") REFERENCES "MaintenancePlan"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "maintenance_task" ADD CONSTRAINT "maintenance_task_plan_id_fkey" FOREIGN KEY ("plan_id") REFERENCES "maintenance_plan"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "MaintenanceTask" ADD CONSTRAINT "MaintenanceTask_templateId_fkey" FOREIGN KEY ("templateId") REFERENCES "MaintenanceTemplate"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "maintenance_task" ADD CONSTRAINT "maintenance_task_template_id_fkey" FOREIGN KEY ("template_id") REFERENCES "maintenance_template"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "ShoppingCart" ADD CONSTRAINT "ShoppingCart_userId_fkey" FOREIGN KEY ("userId") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "shopping_cart" ADD CONSTRAINT "shopping_cart_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "CartItem" ADD CONSTRAINT "CartItem_cartId_fkey" FOREIGN KEY ("cartId") REFERENCES "ShoppingCart"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "cart_item" ADD CONSTRAINT "cart_item_cart_id_fkey" FOREIGN KEY ("cart_id") REFERENCES "shopping_cart"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "CartItem" ADD CONSTRAINT "CartItem_productId_fkey" FOREIGN KEY ("productId") REFERENCES "Product"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "cart_item" ADD CONSTRAINT "cart_item_product_id_fkey" FOREIGN KEY ("product_id") REFERENCES "product"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

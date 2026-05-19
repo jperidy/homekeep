@@ -1,0 +1,4 @@
+src/lib/generated/
+.svelte-kit/
+build/
+node_modules/

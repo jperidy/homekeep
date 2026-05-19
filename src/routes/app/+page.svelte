@@ -6,9 +6,24 @@
 	let { data }: { data: PageData } = $props();
 
 	const stats: { label: string; value: number; icon: Component; color: string }[] = $derived([
-		{ label: 'Propriétés',        value: data.properties.length, icon: Home,          color: 'text-blue-600 bg-blue-50'    },
-		{ label: 'Équipements',       value: 0,                      icon: Wrench,        color: 'text-violet-600 bg-violet-50' },
-		{ label: 'Tâches en attente', value: 0,                      icon: ClipboardList, color: 'text-amber-600 bg-amber-50'  }
+		{
+			label: 'Propriétés',
+			value: data.properties.length,
+			icon: Home,
+			color: 'text-blue-600 bg-blue-50'
+		},
+		{
+			label: 'Équipements',
+			value: data.equipmentCount,
+			icon: Wrench,
+			color: 'text-violet-600 bg-violet-50'
+		},
+		{
+			label: 'Tâches en attente',
+			value: data.pendingTaskCount,
+			icon: ClipboardList,
+			color: 'text-amber-600 bg-amber-50'
+		}
 	]);
 
 	const quickActions: { title: string; description: string; href: string; icon: Component }[] = [
@@ -67,16 +82,21 @@
 			</div>
 			<ul class="divide-y divide-slate-50">
 				{#each data.properties as property}
-					<li class="px-5 py-4 flex items-center gap-3">
-						<div class="w-9 h-9 bg-blue-50 rounded-xl flex items-center justify-center shrink-0">
-							<Home class="w-4 h-4 text-blue-600" strokeWidth={1.5} />
-						</div>
-						<div class="flex-1 min-w-0">
-							<p class="font-medium text-slate-900 truncate">{property.name}</p>
-							{#if property.address}
-								<p class="text-xs text-slate-500 truncate">{property.address}</p>
-							{/if}
-						</div>
+					<li>
+						<a
+							href="/app/properties/{property.id}"
+							class="px-5 py-4 flex items-center gap-3 hover:bg-slate-50 transition-colors"
+						>
+							<div class="w-9 h-9 bg-blue-50 rounded-xl flex items-center justify-center shrink-0">
+								<Home class="w-4 h-4 text-blue-600" strokeWidth={1.5} />
+							</div>
+							<div class="flex-1 min-w-0">
+								<p class="font-medium text-slate-900 truncate">{property.name}</p>
+								{#if property.address}
+									<p class="text-xs text-slate-500 truncate">{property.address}</p>
+								{/if}
+							</div>
+						</a>
 					</li>
 				{/each}
 			</ul>
@@ -86,9 +106,12 @@
 			<div class="w-16 h-16 bg-blue-50 rounded-2xl flex items-center justify-center mx-auto mb-4">
 				<Home class="w-8 h-8 text-blue-600" strokeWidth={1.5} />
 			</div>
-			<h2 class="text-lg font-semibold text-slate-900 mb-2">Commencez par ajouter votre logement</h2>
+			<h2 class="text-lg font-semibold text-slate-900 mb-2">
+				Commencez par ajouter votre logement
+			</h2>
 			<p class="text-slate-500 text-sm mb-6 max-w-sm mx-auto">
-				Enregistrez votre première propriété pour générer votre planning de maintenance personnalisé.
+				Enregistrez votre première propriété pour générer votre planning de maintenance
+				personnalisé.
 			</p>
 			<a
 				href="/app/properties/new"
@@ -109,7 +132,9 @@
 				href={action.href}
 				class="bg-white rounded-2xl border border-slate-100 p-5 flex items-start gap-4 hover:shadow-sm hover:border-slate-200 transition-all group"
 			>
-				<div class="w-10 h-10 rounded-xl bg-slate-100 group-hover:bg-blue-50 flex items-center justify-center shrink-0 transition-colors">
+				<div
+					class="w-10 h-10 rounded-xl bg-slate-100 group-hover:bg-blue-50 flex items-center justify-center shrink-0 transition-colors"
+				>
 					<Icon class="w-5 h-5 text-slate-500 group-hover:text-blue-600 transition-colors" />
 				</div>
 				<div>

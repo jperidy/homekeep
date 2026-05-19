@@ -23,7 +23,7 @@ describe('RegisterPage', () => {
 		mocks.signUpEmail.mockReset();
 	});
 
-	it('affiche tous les champs du formulaire', () => {
+	it('renders all form fields', () => {
 		render(RegisterPage);
 		expect(screen.getByLabelText('Nom complet')).toBeInTheDocument();
 		expect(screen.getByLabelText('Email')).toBeInTheDocument();
@@ -31,7 +31,7 @@ describe('RegisterPage', () => {
 		expect(screen.getByRole('button', { name: /créer mon compte/i })).toBeInTheDocument();
 	});
 
-	it("affiche l'écran de succès après inscription", async () => {
+	it('shows the success screen after registration', async () => {
 		mocks.signUpEmail.mockResolvedValueOnce({ error: null });
 		render(RegisterPage);
 
@@ -53,7 +53,7 @@ describe('RegisterPage', () => {
 		});
 	});
 
-	it('appelle signUp.email avec les bons paramètres', async () => {
+	it('calls signUp.email with the correct parameters', async () => {
 		mocks.signUpEmail.mockResolvedValueOnce({ error: null });
 		render(RegisterPage);
 
@@ -80,7 +80,7 @@ describe('RegisterPage', () => {
 		});
 	});
 
-	it("affiche un message d'erreur si l'inscription échoue", async () => {
+	it('shows an error message when registration fails', async () => {
 		mocks.signUpEmail.mockResolvedValueOnce({ error: { message: 'Email déjà utilisé' } });
 		render(RegisterPage);
 
@@ -93,21 +93,20 @@ describe('RegisterPage', () => {
 		});
 	});
 
-	it("masque le bouton Google quand PUBLIC_GOOGLE_ENABLED est false", () => {
+	it('hides the Google button when PUBLIC_GOOGLE_ENABLED is false', () => {
 		render(RegisterPage);
 		expect(screen.queryByRole('button', { name: /google/i })).not.toBeInTheDocument();
 	});
 
-	it("contient un lien vers la page de connexion", () => {
+	it('contains a link to the login page', () => {
 		render(RegisterPage);
 		expect(screen.getByRole('link', { name: /se connecter/i })).toHaveAttribute('href', '/login');
 	});
 
-	it("contient un lien vers les conditions d'utilisation", () => {
+	it('contains a link to the terms of service', () => {
 		render(RegisterPage);
-		expect(screen.getByRole('link', { name: /conditions d'utilisation/i })).toHaveAttribute(
-			'href',
-			'/terms'
-		);
+		expect(
+			screen.getByRole('link', { name: /conditions d'utilisation/i })
+		).toHaveAttribute('href', '/terms');
 	});
 });

@@ -16,7 +16,6 @@ vi.mock('nodemailer', () => ({
 	}
 }));
 
-// Import après les mocks (hoisting vitest garantit l'ordre)
 const { sendEmail } = await import('./mailer');
 
 describe('sendEmail', () => {
@@ -24,7 +23,7 @@ describe('sendEmail', () => {
 		mockSendMail.mockClear();
 	});
 
-	it('envoie un email avec les bons paramètres', async () => {
+	it('sends an email with the correct parameters', async () => {
 		await sendEmail({
 			to: 'user@example.com',
 			subject: 'Test subject',
@@ -40,7 +39,7 @@ describe('sendEmail', () => {
 		});
 	});
 
-	it('propage les erreurs du transport', async () => {
+	it('propagates transport errors', async () => {
 		mockSendMail.mockRejectedValueOnce(new Error('SMTP connection refused'));
 
 		await expect(
@@ -48,7 +47,7 @@ describe('sendEmail', () => {
 		).rejects.toThrow('SMTP connection refused');
 	});
 
-	it('accepte plusieurs destinataires', async () => {
+	it('accepts multiple recipients', async () => {
 		await sendEmail({
 			to: 'a@example.com, b@example.com',
 			subject: 'Multi',

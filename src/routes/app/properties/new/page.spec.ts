@@ -2,8 +2,6 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen } from '@testing-library/svelte';
 import Page from './+page.svelte';
 
-// --- Mocks ---
-
 const mocks = vi.hoisted(() => ({
 	propertyCreate: vi.fn()
 }));
@@ -16,8 +14,6 @@ vi.mock('$lib/server/prisma', () => ({
 	}
 }));
 
-// --- Helpers ---
-
 import { actions } from './+page.server';
 
 function makeEvent(fields: Record<string, string>, userId = 'user-1') {
@@ -29,7 +25,7 @@ function makeEvent(fields: Record<string, string>, userId = 'user-1') {
 			body: formData
 		}),
 		locals: { user: { id: userId }, session: {} }
-	} as Parameters<typeof actions.default>[0];
+	} as any;
 }
 
 // --- Action tests ---
@@ -49,23 +45,23 @@ describe('properties/new — action', () => {
 		expect(mocks.propertyCreate).not.toHaveBeenCalled();
 	});
 
-	it('creates property and redirects to /app', async () => {
+	it('creates a property and redirects to /app', async () => {
 		mocks.propertyCreate.mockResolvedValueOnce({ id: 'prop-1' });
 		await expect(
-			actions.default(makeEvent({ name: 'Mon appartement', address: '10 rue de la Paix' }))
+			actions.default(makeEvent({ name: 'My apartment', address: '10 rue de la Paix' }))
 		).rejects.toMatchObject({ status: 302, location: '/app' });
 		expect(mocks.propertyCreate).toHaveBeenCalledWith({
-			data: { userId: 'user-1', name: 'Mon appartement', address: '10 rue de la Paix' }
+			data: { userId: 'user-1', name: 'My apartment', address: '10 rue de la Paix' }
 		});
 	});
 
 	it('trims whitespace from name', async () => {
 		mocks.propertyCreate.mockResolvedValueOnce({ id: 'prop-2' });
 		await expect(
-			actions.default(makeEvent({ name: '  Ma maison  ' }))
+			actions.default(makeEvent({ name: '  My house  ' }))
 		).rejects.toMatchObject({ status: 302 });
 		expect(mocks.propertyCreate).toHaveBeenCalledWith(
-			expect.objectContaining({ data: expect.objectContaining({ name: 'Ma maison' }) })
+			expect.objectContaining({ data: expect.objectContaining({ name: 'My house' }) })
 		);
 	});
 
@@ -99,7 +95,7 @@ describe('properties/new — page', () => {
 		expect(screen.getByLabelText(/adresse/i)).toBeInTheDocument();
 	});
 
-	it('shows the submit button', () => {
+	it('renders the submit button', () => {
 		render(Page, { props: { form: null } });
 		expect(screen.getByRole('button', { name: /ajouter la propriété/i })).toBeInTheDocument();
 	});
@@ -109,7 +105,7 @@ describe('properties/new — page', () => {
 		expect(screen.getByText('Le nom est requis.')).toBeInTheDocument();
 	});
 
-	it('repopulates address field after error', () => {
+	it('repopulates the address field after an error', () => {
 		render(Page, { props: { form: { error: 'Le nom est requis.', address: '12 rue Rivoli' } } });
 		const input = screen.getByLabelText(/adresse/i) as HTMLInputElement;
 		expect(input.value).toBe('12 rue Rivoli');

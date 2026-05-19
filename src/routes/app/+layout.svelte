@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Logo from '$lib/components/Logo.svelte';
-	import { LogOut } from '@lucide/svelte';
+	import { LogOut, ShieldCheck } from '@lucide/svelte';
 	import { signOut } from '$lib/auth-client';
 	import { goto } from '$app/navigation';
 
@@ -21,6 +21,15 @@
 			</a>
 			<div class="flex items-center gap-4">
 				<span class="text-sm text-slate-500 hidden sm:block">{data.user?.name}</span>
+				{#if data.isAdmin}
+					<a
+						href="/app/admin/equipment-types"
+						class="text-sm font-medium text-violet-600 hover:text-violet-800 transition-colors flex items-center gap-1.5"
+					>
+						<ShieldCheck class="w-4 h-4" />
+						Admin
+					</a>
+				{/if}
 				<button
 					onclick={handleSignOut}
 					class="text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors flex items-center gap-1.5"

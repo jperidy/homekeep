@@ -13,10 +13,10 @@ model user {
   id            String    @id
   name          String
   email         String    @unique
-  emailVerified Boolean   @default(false)
+  emailVerified Boolean   @default(false) @map("email_verified")
   image         String?
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime  @updatedAt @map("updated_at")
   role          UserRole  @default(USER)
 
   sessions  session[]
@@ -24,44 +24,52 @@ model user {
 
   properties   Property[]
   carts        ShoppingCart[]
+
+  @@map("user")
 }
 
 model session {
   id        String   @id
-  expiresAt DateTime
+  expiresAt DateTime @map("expires_at")
   token     String   @unique
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  ipAddress String?
-  userAgent String?
-  userId    String
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  ipAddress String?  @map("ip_address")
+  userAgent String?  @map("user_agent")
+  userId    String   @map("user_id")
   user      user     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("session")
 }
 
 model account {
   id                    String    @id
-  accountId             String
-  providerId            String
-  userId                String
+  accountId             String    @map("account_id")
+  providerId            String    @map("provider_id")
+  userId                String    @map("user_id")
   user                  user      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  accessToken           String?
-  refreshToken          String?
-  idToken               String?
-  accessTokenExpiresAt  DateTime?
-  refreshTokenExpiresAt DateTime?
+  accessToken           String?   @map("access_token")
+  refreshToken          String?   @map("refresh_token")
+  idToken               String?   @map("id_token")
+  accessTokenExpiresAt  DateTime? @map("access_token_expires_at")
+  refreshTokenExpiresAt DateTime? @map("refresh_token_expires_at")
   scope                 String?
   password              String?
-  createdAt             DateTime  @default(now())
-  updatedAt             DateTime  @updatedAt
+  createdAt             DateTime  @default(now()) @map("created_at")
+  updatedAt             DateTime  @updatedAt @map("updated_at")
+
+  @@map("account")
 }
 
 model verification {
   id         String    @id
   identifier String
   value      String
-  expiresAt  DateTime
-  createdAt  DateTime? @default(now())
-  updatedAt  DateTime? @updatedAt
+  expiresAt  DateTime  @map("expires_at")
+  createdAt  DateTime? @default(now()) @map("created_at")
+  updatedAt  DateTime? @updatedAt @map("updated_at")
+
+  @@map("verification")
 }
 
 // ─── Enums ────────────────────────────────────────────────────────────────────
@@ -69,6 +77,8 @@ model verification {
 enum UserRole {
   USER
   ADMIN
+
+  @@map("user_role")
 }
 
 // ─── Catalogue (curated by admin) ────────────────────────────────────────────
@@ -78,123 +88,161 @@ model EquipmentType {
   name        String   @unique
   category    String
   description String?
-  imageUrl    String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  imageUrl    String?  @map("image_url")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
 
   maintenanceTemplates MaintenanceTemplate[]
+  maintenanceRules     MaintenanceRule[]
   equipments           Equipment[]
+
+  @@map("equipment_type")
+}
+
+model MaintenanceRule {
+  id              String        @id @default(cuid())
+  equipmentTypeId String        @map("equipment_type_id")
+  equipmentType   EquipmentType @relation(fields: [equipmentTypeId], references: [id], onDelete: Cascade)
+  label           String
+  intervalWeeks   Int           @map("interval_weeks")
+  description     String?
+  createdAt       DateTime      @default(now()) @map("created_at")
+  updatedAt       DateTime      @updatedAt @map("updated_at")
+
+  tasks MaintenanceTask[]
+
+  @@unique([equipmentTypeId, label])
+  @@map("maintenance_rule")
 }
 
 model MaintenanceTemplate {
   id              String        @id @default(cuid())
-  equipmentTypeId String
+  equipmentTypeId String        @map("equipment_type_id")
   equipmentType   EquipmentType @relation(fields: [equipmentTypeId], references: [id])
   title           String
   description     String?
-  frequencyDays   Int
-  createdAt       DateTime      @default(now())
-  updatedAt       DateTime      @updatedAt
+  frequencyDays   Int           @map("frequency_days")
+  createdAt       DateTime      @default(now()) @map("created_at")
+  updatedAt       DateTime      @updatedAt @map("updated_at")
 
   maintenanceTasks MaintenanceTask[]
   products         ProductOnTemplate[]
+
+  @@map("maintenance_template")
 }
 
 model Product {
   id           String   @id @default(cuid())
   name         String
   description  String?
-  imageUrl     String?
-  affiliateUrl String
+  imageUrl     String?  @map("image_url")
+  affiliateUrl String   @map("affiliate_url")
   retailer     String
   price        Float?
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
 
   templates ProductOnTemplate[]
   cartItems CartItem[]
+
+  @@map("product")
 }
 
 model ProductOnTemplate {
-  templateId String
+  templateId String              @map("template_id")
   template   MaintenanceTemplate @relation(fields: [templateId], references: [id])
-  productId  String
+  productId  String              @map("product_id")
   product    Product             @relation(fields: [productId], references: [id])
 
   @@id([templateId, productId])
+  @@map("product_on_template")
 }
 
 // ─── User domain ─────────────────────────────────────────────────────────────
 
 model Property {
   id        String   @id @default(cuid())
-  userId    String
+  userId    String   @map("user_id")
   user      user     @relation(fields: [userId], references: [id], onDelete: Cascade)
   name      String
   address   String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
   equipments Equipment[]
+
+  @@map("property")
 }
 
 model Equipment {
   id              String        @id @default(cuid())
-  propertyId      String
+  propertyId      String        @map("property_id")
   property        Property      @relation(fields: [propertyId], references: [id], onDelete: Cascade)
-  equipmentTypeId String
+  equipmentTypeId String        @map("equipment_type_id")
   equipmentType   EquipmentType @relation(fields: [equipmentTypeId], references: [id])
   name            String
   brand           String?
   model           String?
-  installedAt     DateTime?
-  createdAt       DateTime      @default(now())
-  updatedAt       DateTime      @updatedAt
+  installedAt     DateTime?     @map("installed_at")
+  createdAt       DateTime      @default(now()) @map("created_at")
+  updatedAt       DateTime      @updatedAt @map("updated_at")
 
   maintenancePlans MaintenancePlan[]
+
+  @@map("equipment")
 }
 
 model MaintenancePlan {
   id          String    @id @default(cuid())
-  equipmentId String
+  equipmentId String    @unique @map("equipment_id")
   equipment   Equipment @relation(fields: [equipmentId], references: [id], onDelete: Cascade)
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
 
   tasks MaintenanceTask[]
+
+  @@map("maintenance_plan")
 }
 
 model MaintenanceTask {
   id          String               @id @default(cuid())
-  planId      String
+  planId      String               @map("plan_id")
   plan        MaintenancePlan      @relation(fields: [planId], references: [id], onDelete: Cascade)
-  templateId  String?
+  templateId  String?              @map("template_id")
   template    MaintenanceTemplate? @relation(fields: [templateId], references: [id])
+  ruleId      String?              @map("rule_id")
+  rule        MaintenanceRule?     @relation(fields: [ruleId], references: [id], onDelete: SetNull)
   title       String
-  dueDate     DateTime
-  completedAt DateTime?
-  createdAt   DateTime             @default(now())
-  updatedAt   DateTime             @updatedAt
+  dueDate     DateTime             @map("due_date")
+  completedAt DateTime?            @map("completed_at")
+  createdAt   DateTime             @default(now()) @map("created_at")
+  updatedAt   DateTime             @updatedAt @map("updated_at")
+
+  @@map("maintenance_task")
 }
 
 // ─── Shopping ─────────────────────────────────────────────────────────────────
 
 model ShoppingCart {
   id        String   @id @default(cuid())
-  userId    String
+  userId    String   @map("user_id")
   user      user     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
   items CartItem[]
+
+  @@map("shopping_cart")
 }
 
 model CartItem {
   id        String       @id @default(cuid())
-  cartId    String
+  cartId    String       @map("cart_id")
   cart      ShoppingCart @relation(fields: [cartId], references: [id], onDelete: Cascade)
-  productId String
+  productId String       @map("product_id")
   product   Product      @relation(fields: [productId], references: [id])
   quantity  Int          @default(1)
-  createdAt DateTime     @default(now())
+  createdAt DateTime     @default(now()) @map("created_at")
+
+  @@map("cart_item")
 }

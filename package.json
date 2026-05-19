@@ -11,6 +11,7 @@
 		"prepare": "svelte-kit sync || echo ''",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
+		"format": "prettier --write .",
 		"test": "vitest run",
 		"test:watch": "vitest",
 		"docker:up": "docker compose up",
@@ -18,7 +19,9 @@
 		"docker:down": "docker compose down",
 		"db:migrate": "docker compose exec app ./node_modules/.bin/prisma migrate dev",
 		"db:studio": "prisma studio",
-		"db:reset": "docker compose exec app ./node_modules/.bin/prisma migrate reset"
+		"db:reset": "docker compose exec app ./node_modules/.bin/prisma migrate reset",
+		"make-admin": "docker compose exec app ./node_modules/.bin/tsx scripts/make-admin.ts",
+		"seed": "docker compose exec app ./node_modules/.bin/tsx scripts/seed.ts"
 	},
 	"pnpm": {
 		"onlyBuiltDependencies": [
@@ -38,10 +41,13 @@
 		"@types/pg": "^8.20.0",
 		"dotenv": "^17.4.2",
 		"jsdom": "^29.1.1",
+		"prettier": "^3.8.3",
+		"prettier-plugin-svelte": "^3.5.2",
 		"prisma": "^7.8.0",
 		"svelte": "^5.55.2",
 		"svelte-check": "^4.4.6",
 		"tailwindcss": "^4.3.0",
+		"tsx": "^4.19.0",
 		"typescript": "^6.0.2",
 		"vite": "^8.0.7",
 		"vitest": "^4.1.6"

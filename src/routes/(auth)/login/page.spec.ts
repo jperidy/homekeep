@@ -30,21 +30,21 @@ describe('LoginPage', () => {
 		mocks.signInMagicLink.mockReset();
 	});
 
-	it('affiche le formulaire mot de passe par défaut', () => {
+	it('renders the password form by default', () => {
 		render(LoginPage);
 		expect(screen.getByLabelText('Email')).toBeInTheDocument();
 		expect(screen.getByLabelText('Mot de passe')).toBeInTheDocument();
 		expect(screen.getByRole('button', { name: /se connecter/i })).toBeInTheDocument();
 	});
 
-	it('bascule vers le mode magic link', async () => {
+	it('switches to magic link mode', async () => {
 		render(LoginPage);
 		await fireEvent.click(screen.getByRole('button', { name: /magic link/i }));
 		expect(screen.getByRole('button', { name: /envoyer le lien/i })).toBeInTheDocument();
 		expect(screen.queryByLabelText('Mot de passe')).not.toBeInTheDocument();
 	});
 
-	it('appelle signIn.email avec les bons paramètres', async () => {
+	it('calls signIn.email with the correct parameters', async () => {
 		mocks.signInEmail.mockResolvedValueOnce({ error: null });
 		render(LoginPage);
 
@@ -65,7 +65,7 @@ describe('LoginPage', () => {
 		});
 	});
 
-	it("affiche un message d'erreur sur échec de connexion", async () => {
+	it('shows an error message on login failure', async () => {
 		mocks.signInEmail.mockResolvedValueOnce({ error: { message: 'Identifiants incorrects' } });
 		render(LoginPage);
 
@@ -76,7 +76,7 @@ describe('LoginPage', () => {
 		});
 	});
 
-	it('affiche le message de confirmation après envoi du magic link', async () => {
+	it('shows confirmation after magic link is sent', async () => {
 		mocks.signInMagicLink.mockResolvedValueOnce({ error: null });
 		render(LoginPage);
 
@@ -93,7 +93,7 @@ describe('LoginPage', () => {
 		});
 	});
 
-	it("affiche l'erreur du magic link en cas d'échec", async () => {
+	it('shows an error when magic link fails', async () => {
 		mocks.signInMagicLink.mockResolvedValueOnce({ error: { message: 'Email introuvable' } });
 		render(LoginPage);
 
@@ -107,7 +107,7 @@ describe('LoginPage', () => {
 		});
 	});
 
-	it("masque le bouton Google quand PUBLIC_GOOGLE_ENABLED est false", () => {
+	it('hides the Google button when PUBLIC_GOOGLE_ENABLED is false', () => {
 		render(LoginPage);
 		expect(screen.queryByRole('button', { name: /google/i })).not.toBeInTheDocument();
 	});
