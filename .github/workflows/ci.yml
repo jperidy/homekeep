@@ -15,9 +15,8 @@ jobs:
         with:
           node-version: 22
 
-      - uses: pnpm/action-setup@v4
-        with:
-          version: 11.1.2
+      - name: Enable corepack
+        run: corepack enable
 
       - uses: actions/setup-node@v4
         with:
