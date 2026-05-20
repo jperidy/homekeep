@@ -54,3 +54,15 @@ resource "render_web_service" "app" {
 
   depends_on = [render_postgres.db]
 }
+
+resource "github_actions_secret" "render_api_key" {
+  repository      = "homekeep"
+  secret_name     = "RENDER_API_KEY"
+  value = var.render_api_key
+}
+
+resource "github_actions_secret" "render_service_id" {
+  repository      = "homekeep"
+  secret_name     = "RENDER_SERVICE_ID"
+  value = render_web_service.app.id
+}

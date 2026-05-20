@@ -4,6 +4,17 @@ variable "render_api_key" {
   sensitive   = true
 }
 
+variable "github_token" {
+  description = "GitHub Personal Access Token avec permissions repo+secrets (github.com/settings/tokens)"
+  type        = string
+  sensitive   = true
+}
+
+variable "github_owner" {
+  description = "GitHub username ou organisation (ex: jperidy)"
+  type        = string
+}
+
 
 variable "render_owner_id" {
   description = "Render owner ID (visible in account URL: dashboard.render.com/u/<owner_id>)"
