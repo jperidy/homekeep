@@ -64,5 +64,11 @@ resource "github_actions_secret" "render_api_key" {
 resource "github_actions_secret" "render_service_id" {
   repository      = "homekeep"
   secret_name     = "RENDER_SERVICE_ID"
-  value = render_web_service.app.id
+  value           = render_web_service.app.id
+}
+
+resource "github_actions_secret" "better_auth_secret" {
+  repository      = "homekeep"
+  secret_name     = "BETTER_AUTH_SECRET"
+  value           = var.better_auth_secret
 }
