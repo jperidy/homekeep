@@ -7,7 +7,7 @@ RUN pnpm install --frozen-lockfile
 COPY . .
 RUN pnpm exec svelte-kit sync
 RUN pnpm exec prisma generate
-RUN pnpm build
+RUN BETTER_AUTH_SECRET=build-placeholder pnpm build
 
 FROM node:22-slim AS runner
 RUN apt-get update -y && apt-get install -y openssl && rm -rf /var/lib/apt/lists/*
