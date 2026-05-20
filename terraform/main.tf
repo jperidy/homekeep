@@ -50,6 +50,9 @@ resource "render_web_service" "app" {
     "NODE_ENV" = {
       value = "production"
     }
+    "ORIGIN" = {
+      value = "https://${var.app_hostname}"
+    }
   }
 
   depends_on = [render_postgres.db]
