@@ -32,19 +32,16 @@ resource "render_web_service" "app" {
     "PUBLIC_BETTER_AUTH_URL" = {
       value = "https://${var.app_hostname}"
     }
+    "BREVO_API_KEY" = {
+      value = var.brevo_api_key
+    }
     "SMTP_HOST" = {
       value = var.smtp_host
     }
     "SMTP_PORT" = {
       value = var.smtp_port
     }
-    "SMTP_USER" = {
-      value = var.smtp_user
-    }
-    "SMTP_PASS" = {
-      value = var.smtp_pass
-    }
-    "SMTP_FROM" = {
+"SMTP_FROM" = {
       value = var.smtp_from
     }
     "NODE_ENV" = {
@@ -56,6 +53,10 @@ resource "render_web_service" "app" {
   }
 
   depends_on = [render_postgres.db]
+
+  lifecycle {
+    ignore_changes = all
+  }
 }
 
 resource "github_actions_secret" "render_api_key" {

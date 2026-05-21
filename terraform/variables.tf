@@ -32,6 +32,13 @@ variable "better_auth_secret" {
   sensitive   = true
 }
 
+variable "brevo_api_key" {
+  description = "Brevo API key (Settings > API Keys, NOT SMTP Keys)"
+  type        = string
+  sensitive   = true
+  default     = ""
+}
+
 variable "smtp_host" {
   description = "SMTP host (ex: smtp.brevo.com)"
   type        = string
@@ -44,19 +51,6 @@ variable "smtp_port" {
   default     = "587"
 }
 
-variable "smtp_user" {
-  description = "SMTP username"
-  type        = string
-  default     = ""
-  sensitive   = true
-}
-
-variable "smtp_pass" {
-  description = "SMTP password"
-  type        = string
-  default     = ""
-  sensitive   = true
-}
 
 variable "smtp_from" {
   description = "SMTP from address"
