@@ -83,6 +83,7 @@ Le fichier `.env` est lu par Docker Compose et transmis au container.
 | `SMTP_HOST`              | —           | Hôte SMTP (défaut : `mailpit` via Docker)                  |
 | `SMTP_PORT`              | —           | Port SMTP (défaut : `1025`)                                |
 | `SMTP_FROM`              | —           | Adresse expéditeur des emails                              |
+| `BREVO_API_KEY`          | —           | Clé API Brevo pour l'envoi d'emails en production          |
 | `GOOGLE_CLIENT_ID`       | —           | OAuth Google (optionnel)                                   |
 | `GOOGLE_CLIENT_SECRET`   | —           | OAuth Google (optionnel)                                   |
 | `PUBLIC_GOOGLE_ENABLED`  | —           | Afficher le bouton Google (`true`/`false`)                 |
@@ -137,6 +138,124 @@ pnpm test:watch      # Tests en mode watch
 pnpm check           # Vérification TypeScript + Svelte
 pnpm check:watch     # Vérification en mode watch
 ```
+
+---
+
+## Infrastructure & Déploiement
+
+### Architecture
+
+```
+GitHub (main)
+    │
+    ├── GitHub Actions CI
+    │       ├── pnpm check (TypeScript + Svelte)
+    │       ├── pnpm build
+    │       └── pnpm test
+    │               │ (si CI passe sur main)
+    │               ▼
+    │       API Render → déclenche le déploiement
+    │
+    └── Render (staging)
+            ├── Web Service  https://homekeep-b2ys.onrender.com
+            │       └── Docker (Node.js, adapter-node)
+            │               └── prisma migrate deploy au démarrage
+            └── PostgreSQL   (free tier, Frankfurt)
+```
+
+**Emails :** [Brevo](https://brevo.com) via API HTTP (pas SMTP — les ports SMTP sont bloqués par Render free tier).
+
+---
+
+### Déploiement
+
+Tout push sur `main` qui passe la CI déclenche automatiquement un déploiement sur Render :
+
+```
+git push origin main
+```
+
+Le pipeline complet prend ~5 min (build Docker inclus).
+
+---
+
+### Provisionner l'infrastructure from scratch
+
+Les ressources (base de données, web service, secrets GitHub) sont gérées par Terraform.
+
+#### Prérequis
+
+- [Terraform](https://developer.hashicorp.com/terraform/install) ≥ 1.5
+- Compte [Render](https://render.com) avec le repo GitHub connecté
+- Compte [Brevo](https://brevo.com) pour les emails
+- GitHub Personal Access Token (scopes : `repo` + `secrets`)
+
+#### Configuration
+
+```sh
+cd terraform
+cp terraform.tfvars.example terraform.tfvars  # ou créer manuellement
+```
+
+Renseigner `terraform.tfvars` :
+
+```hcl
+render_api_key     = "..."   # Render → Settings > API Keys
+render_owner_id    = "..."   # Render → URL du dashboard (usr-xxxx)
+github_token       = "..."   # github.com/settings/tokens
+github_owner       = "jperidy"
+github_repo_url    = "https://github.com/jperidy/homekeep"
+better_auth_secret = "..."   # openssl rand -base64 32
+brevo_api_key      = "..."   # Brevo → Settings > API Keys
+app_hostname       = "homekeep-b2ys.onrender.com"
+```
+
+#### Provisionner
+
+```sh
+terraform init      # télécharger les providers (Render + GitHub)
+terraform plan      # vérifier ce qui sera créé
+terraform apply     # créer la DB, le web service, les secrets GitHub
+```
+
+> **Note :** Le web service Render est configuré avec `lifecycle { ignore_changes = all }` en raison d'un bug du provider Render sur le free tier (`maintenance_mode`). Après la création initiale, les variables d'environnement doivent être modifiées directement dans le dashboard Render.
+
+---
+
+### Commandes Terraform utiles
+
+```sh
+# Voir l'état actuel des ressources
+terraform show
+
+# Voir les outputs (URLs, IDs)
+terraform output
+
+# Récupérer la connection string externe de la DB (sensible)
+terraform output -raw db_external_url
+
+# Rafraîchir le state sans modifier les ressources
+terraform apply -refresh-only
+
+# Détruire toute l'infrastructure ⚠
+terraform destroy
+```
+
+---
+
+### Se connecter à la base de données de staging
+
+La DB de production est accessible depuis la machine locale via la connection string externe :
+
+```sh
+# Prisma Studio sur la DB de staging
+DATABASE_URL=$(terraform output -raw db_external_url) pnpm db:studio
+
+# psql
+psql $(terraform output -raw db_external_url)
+```
+
+> La connection string inclut `sslmode=require`. S'assurer que le client accepte SSL.
 
 ---
 
